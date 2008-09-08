@@ -7,7 +7,7 @@ int main()
 	scanf("%d",&n);
 	if(n==0)
 	{
-		puts("0");
+		puts("1");
 		return 0;
 	}
 	unsigned int i=n;
