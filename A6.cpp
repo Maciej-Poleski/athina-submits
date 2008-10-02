@@ -25,8 +25,18 @@ int main()
 	cin>>z;
 	while(z--)
 	{
-	double a,b,c,d, pr=0.0001;
+	double a,b,c,d, pr=0.00001;
 	cin>>x>>y>>c_;
+	if(c_==0)
+	{
+		cout<<min(x,y)<<'\n';
+		continue;
+	}
+	if(x==0 || y==0)
+	{
+		cout<<"0.000\n";
+		continue;
+	}
 	a=x;b=y;
 	c=min(a,b)/2;
 	a-=0.00001;b-=0.00001;
