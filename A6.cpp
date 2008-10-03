@@ -1,6 +1,5 @@
-#include <iostream>
+#include <cstdio>
 #include <cmath>
-#include <iomanip>
 using namespace std;
 
 double x,y,c;
@@ -19,12 +18,11 @@ double min(double l,double p)
 
 int main()
 {
-	ios_base::sync_with_stdio(0);
 	unsigned int z;
-	cin>>z;
+	scanf("%u",&z);
 	while(z--)
 	{
-		cin>>x>>y>>c;
+		scanf("%la%la%la",&x,&y,&c);
 		double tmp=min(x,y)/2,st=tmp/2,pr=0.0000000001;
 		while(f(tmp) && st)
 		{
@@ -34,7 +32,7 @@ int main()
 				tmp-=st;
 			st/=2;
 		}
-		cout<<fixed<<setprecision(3)<<tmp<<'\n';
+		printf("%.3f\n",tmp);
 	}
 	return 0;
 }
