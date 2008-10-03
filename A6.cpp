@@ -25,7 +25,7 @@ int main()
 	while(z--)
 	{
 		cin>>x>>y>>c;
-		long double tmp=min(x,y)/2,st=tmp/2,pr=0.000001;
+		long double tmp=min(x,y)/2,st=tmp/2,pr=0.0000000001;
 		while(abs(f(tmp))-pr>0)
 		{
 			if(f(tmp)<0)
