@@ -3,14 +3,14 @@
 #include <iomanip>
 using namespace std;
 
-long double x,y,c;
+double x,y,c;
 
-long double f(long double w)
+double f(double w)
 {
 	return 1/sqrt(x*x-w*w)+1/sqrt(y*y-w*w)-1/c;
 }
 
-long double min(long double l,long double p)
+double min(double l,double p)
 {
 	if(l<p)
 		return l;
@@ -25,8 +25,8 @@ int main()
 	while(z--)
 	{
 		cin>>x>>y>>c;
-		long double tmp=min(x,y)/2,st=tmp/2,pr=0.0000000001;
-		while(abs(f(tmp))-pr>0)
+		double tmp=min(x,y)/2,st=tmp/2,pr=0.0000000001;
+		while(f(tmp) && st)
 		{
 			if(f(tmp)<0)
 				tmp+=st;
