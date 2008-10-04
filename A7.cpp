@@ -19,8 +19,6 @@ class bigBinInteger
 
     bigBinInteger(const bigBinInteger & co)
     {
-        //if(wsk)
-        //delete [] wsk;
         wsk=new char[8002];
         obj=wsk+sizeof(char)*4000;
         for(unsigned int i=0;i<co.size;++i)
@@ -30,18 +28,8 @@ class bigBinInteger
         size=co.size;
     }
 
-/*    ~bigBinInteger()
-    {
-        if(wsk);
-        delete [] wsk;
-        wsk=obj=0;
-    }*/
-
     bigBinInteger & operator=(const bigBinInteger & co)
     {
-        if(wsk)
-        delete [] wsk;
-        wsk=new char[8002];
         obj=wsk+sizeof(char)*4000;
         for(unsigned int i=0;i<co.size;++i)
         {
