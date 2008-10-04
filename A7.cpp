@@ -1,11 +1,13 @@
 #include <cstdio>
-#include <cstdlib>
 
 class bigBinInteger
 {
-    char *wsk,*obj;
-    static char tmp;
-    int size;
+    char *wsk,*obj;     /*  wsk to cała dostępna przestrzeń, obj to początek liczby w przestrzeni wsk.
+                            Wykorzystuje to swobodnego przesuwania bitowego. */
+    int size;           //  Długość liczby w zapisie binarnym
+
+    /*  Najbardziej znaczący bit znajduje się w *obj,
+        najmniej znaczący w obj[size-1] */
 
     public:
 
@@ -13,6 +15,19 @@ class bigBinInteger
     {
         wsk=new char[8002];
         obj=wsk+sizeof(char)*4000;
+    }
+
+    bigBinInteger(const bigBinInteger & co)
+    {
+        if(wsk)
+        delete [] wsk;
+        wsk=new char[8002];
+        obj=wsk+sizeof(char)*4000;
+        for(unsigned int i=0;i<size;++i)
+        {
+            obj[i]=co.obj[i];
+        }
+        size=co.size;
     }
 
     ~bigBinInteger()
@@ -23,63 +38,29 @@ class bigBinInteger
 
     bigBinInteger & operator>>(const unsigned int & ile)
     {
-        size-=ile;
+        size-=ile;  //  Czyli obcinam końcówke (najmniej znaczące bity)
         if(size<0)
         size=0;
     }
 
-    bool isEmpty()
+    bigBinInteger & operator<<(unsigned int ile)
     {
-        if(size)
+        for(unsigned int i=0;i<ile;++i)
+        obj[size+i]=0;  //  Zeruje przestrzeń, którą zajmą najmniej zanczące bity
+        size+=ile;
+    }
+
+    bool operator<(const bigBinInteger & co)
+    {
+        if(size<co.size) return true;
+        if(size>co.size) return false;
+
+        for(unsigned int i=0;i<size;++i)
+        {
+            if(obj[i]>co.obj[i]) return false;
+            if(obj[i]<co.obj[i]) return true;
+        }
         return false;
-        return true;
-    }
-
-    void getInteger()
-    {
-        obj=wsk+sizeof(char)*4000;
-        char *target=obj;
-        size=0;
-        for(char tmp=getchar();tmp=='1' || tmp=='0';tmp=getchar())
-        {
-            *(target++)=tmp-'0';
-            ++size;
-        }
-
-        deleteZeros();
-    }
-
-    void putInteger()
-    {
-        char *from=obj;
-        unsigned int i=size;
-        while(i--)
-        {
-            putchar((*(from++))+'0');
-        }
-    }
-
-    void deleteZeros()
-    {
-        while(*obj==0 && size)
-        {
-            --size;
-            ++obj;
-        }
-    }
-
-    void atomSubstraction(char* od_czego,char co)
-    {
-        if(co==1)
-        {
-            if(*od_czego==1)
-            *od_czego=0;
-            else
-            {
-                *od_czego=1;
-                atomSubstraction(od_czego-1,co);
-            }
-        }
     }
 
     bigBinInteger & operator-=(const bigBinInteger & co)
@@ -96,64 +77,85 @@ class bigBinInteger
         return *this;
     }
 
-    bigBinInteger(const bigBinInteger & co)
-    {
-        if(wsk)
-        delete [] wsk;
-        wsk=new char[8002];
-        obj=wsk+sizeof(char)*4000;
-        for(unsigned int i=0;i<size;++i)
-        {
-            obj[i]=co.obj[i];
-        }
-        size=co.size;
-    }
-
     bigBinInteger & operator-(const bigBinInteger & co)
     {
-        bigBinInteger *temp=new bigBinInteger();
+        bigBinInteger *temp=new bigBinInteger;
         *temp=*this;
         *temp-=co;
 
         return *temp;
     }
 
-    bool isPair()
+    bool isEmpty()
     {
-        return obj[size-1]-1;
-    }
-
-    bool operator<(const bigBinInteger & co)
-    {
-        if(size<co.size) return true;
-        if(size>co.size) return false;
-
-        for(unsigned int i=0;i<size;++i)
-        {
-            if(obj[i]>co.obj[i]) return false;
-            if(obj[i]<co.obj[i]) return true;
-        }
+        if(size)
         return false;
+        return true;
     }
 
-    bigBinInteger & operator<<(unsigned int ile)
+    void getInteger()   //  Pobieram liczbę w zapisie binarnym
     {
-        for(unsigned int i=0;i<ile;++i)
-        obj[size+i]=0;
-        size+=ile;
+        obj=wsk+sizeof(char)*4000;  //  Powracam do początkowego ustawienia wskaźnika w przestrzeni
+        char *target=obj;           //  Wskaźnik pomocniczy
+        size=0;                     //  Zeruje długość liczby
+        for(char tmp=getchar();tmp=='1' || tmp=='0';tmp=getchar())
+        {
+            *(target++)=tmp-'0';
+            ++size;
+        }
+
+        deleteZeros();
+    }
+
+    void putInteger()   //  Wyświetlam liczbę w zapisie binarnym
+    {
+        char *from=obj;
+        unsigned int i=size;
+        while(i--)
+        {
+            putchar((*(from++))+'0');
+        }
+    }
+
+    void deleteZeros()  //  Obcinam zera wiodące
+    {
+        while(*obj==0 && size)
+        {
+            --size;
+            ++obj;
+        }
+    }
+
+    void atomSubstraction(char* od_czego,char co)   //  Odejmuję od liczby potęgę dwójki (pojedyńczy bit)
+    {
+        if(co==1)
+        {
+            if(*od_czego==1)
+            *od_czego=0;
+            else
+            {
+                *od_czego=1;
+                atomSubstraction(od_czego-1,co);    //  Rekurencyjnie w stronę bardziej znaczących bitów
+            }
+        }
+    }
+
+    bool isPair()   //  Czy liczba jest parzysta
+    {
+        return obj[size-1]-1;   //  Jeżeli tak, to 0-1=-1 || 0-1=0xffffffff w zależności czy char jest signed czy nie...
     }
 };
 
 
 int main()
 {
-    unsigned int z;
+    unsigned int z; //  Zestawy danych
     scanf("%u",&z);
-    getchar();
+    getchar();      //  bigBinInteger::getInteger() jest bardzo wrażliwa
     while(z--)
     {{
-        bigBinInteger a,b;
-        unsigned int k;
+        bigBinInteger a,b;  //  Dla bezpieczeństwa każdy zestaw otrzymuje świerze obiekty
+        unsigned int r;
         a.getInteger();
         b.getInteger();
 
@@ -168,7 +170,7 @@ int main()
             return 0;
         }
 
-        for(k=0;a.isPair() && b.isPair();++k)
+        for(r=0;a.isPair() && b.isPair();++r)
         {
             a>>1;
             b>>1;
@@ -186,10 +188,10 @@ int main()
             while(b.isPair()) b>>1;
             if(a<b)
             {
-                bigBinInteger r;
-                r=(b-a)>>1;
+                bigBinInteger tmp;
+                tmp=(b-a)>>1;
                 b=a;
-                a=r;
+                a=tmp;
             }
             else
             {
@@ -198,7 +200,7 @@ int main()
             }
         } while(!b.isEmpty());
 
-        if(k) a<<k;
+        if(r) a<<r;
 
         a.putInteger();
         putchar('\n');
