@@ -19,21 +19,37 @@ class bigBinInteger
 
     bigBinInteger(const bigBinInteger & co)
     {
-        if(wsk)
-        delete [] wsk;
+        //if(wsk)
+        //delete [] wsk;
         wsk=new char[8002];
         obj=wsk+sizeof(char)*4000;
-        for(unsigned int i=0;i<size;++i)
+        for(unsigned int i=0;i<co.size;++i)
         {
             obj[i]=co.obj[i];
         }
         size=co.size;
     }
 
-    ~bigBinInteger()
+/*    ~bigBinInteger()
     {
+        if(wsk);
         delete [] wsk;
         wsk=obj=0;
+    }*/
+
+    bigBinInteger & operator=(const bigBinInteger & co)
+    {
+        if(wsk)
+        delete [] wsk;
+        wsk=new char[8002];
+        obj=wsk+sizeof(char)*4000;
+        for(unsigned int i=0;i<co.size;++i)
+        {
+            obj[i]=co.obj[i];
+        }
+        size=co.size;
+
+        return *this;
     }
 
     bigBinInteger & operator>>(const unsigned int & ile)
@@ -63,7 +79,7 @@ class bigBinInteger
         return false;
     }
 
-    bigBinInteger & operator-=(const bigBinInteger & co)
+void operator-=(const bigBinInteger & co)
     {
         char *wsk1,*wsk2;
         wsk1=obj+size-1;
@@ -74,16 +90,15 @@ class bigBinInteger
             --wsk1;--wsk2;
         }
         deleteZeros();
-        return *this;
     }
 
-    bigBinInteger & operator-(const bigBinInteger & co)
+    bigBinInteger operator-(const bigBinInteger & co)
     {
-        bigBinInteger *temp=new bigBinInteger;
-        *temp=*this;
-        *temp-=co;
+        bigBinInteger temp;
+        temp=*this;
+        temp-=co;
 
-        return *temp;
+        return temp;
     }
 
     bool isEmpty()
@@ -146,6 +161,8 @@ class bigBinInteger
     }
 };
 
+bigBinInteger a,b,tmp;
+unsigned int r;
 
 int main()
 {
@@ -153,9 +170,7 @@ int main()
     scanf("%u",&z);
     getchar();      //  bigBinInteger::getInteger() jest bardzo wrażliwa
     while(z--)
-    {{
-        bigBinInteger a,b;  //  Dla bezpieczeństwa każdy zestaw otrzymuje świerze obiekty
-        unsigned int r;
+    {
         a.getInteger();
         b.getInteger();
 
@@ -188,8 +203,9 @@ int main()
             while(b.isPair()) b>>1;
             if(a<b)
             {
-                bigBinInteger tmp;
-                tmp=(b-a)>>1;
+                tmp=b;
+                tmp-=a;
+                tmp>>1;
                 b=a;
                 a=tmp;
             }
@@ -204,7 +220,7 @@ int main()
 
         a.putInteger();
         putchar('\n');
-    }}
+    }
 
     return 0;
 }
