@@ -144,58 +144,65 @@ class bigBinInteger
     }
 };
 
-bigBinInteger a,b;
-unsigned int k;
 
 int main()
 {
-    a.getInteger();
-    b.getInteger();
+    unsigned int z;
+    scanf("%u",&z);
+    getchar();
+    while(z--)
+    {{
+        bigBinInteger a,b;
+        unsigned int k;
+        a.getInteger();
+        b.getInteger();
 
-    if(a.isEmpty())
-    {
-        b.putInteger();
-        return 0;
-    }
-    if(b.isEmpty())
-    {
-        a.putInteger();
-        return 0;
-    }
-
-    for(k=0;a.isPair() && b.isPair();++k)
-    {
-        a>>1;
-        b>>1;
-    }
-
-    do
-    {
         if(a.isEmpty())
         {
-            a=b;
-            break;
+            b.putInteger();
+            return 0;
+        }
+        if(b.isEmpty())
+        {
+            a.putInteger();
+            return 0;
         }
 
-        while(a.isPair()) a>>1;
-        while(b.isPair()) b>>1;
-        if(a<b)
+        for(k=0;a.isPair() && b.isPair();++k)
         {
-            bigBinInteger r;
-            r=(b-a)>>1;
-            b=a;
-            a=r;
-        }
-        else
-        {
-            a-=b;
             a>>1;
+            b>>1;
         }
-    } while(!b.isEmpty());
 
-    if(k) a<<k;
+        do
+        {
+            if(a.isEmpty())
+            {
+                a=b;
+                break;
+            }
 
-    a.putInteger();
+            while(a.isPair()) a>>1;
+            while(b.isPair()) b>>1;
+            if(a<b)
+            {
+                bigBinInteger r;
+                r=(b-a)>>1;
+                b=a;
+                a=r;
+            }
+            else
+            {
+                a-=b;
+                a>>1;
+            }
+        } while(!b.isEmpty());
+
+        if(k) a<<k;
+
+        a.putInteger();
+        putchar('\n');
+    }}
 
     return 0;
 }
