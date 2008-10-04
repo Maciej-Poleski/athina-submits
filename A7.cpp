@@ -193,12 +193,9 @@ int main()
         }
     } while(!b.isEmpty());
 
- //   if(k) a<<k;
+    if(k) a<<k;
 
     a.putInteger();
-    //a.putInteger();
-    //putchar(' ');
-    //b.putInteger();
 
     return 0;
 }
