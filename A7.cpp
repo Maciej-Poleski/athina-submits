@@ -166,13 +166,13 @@ int main()
         {
             b.putInteger();
 	    putchar('\n');
-            break;
+            continue;
         }
         if(b.isEmpty())
         {
             a.putInteger();
 	    putchar('\n');
-	    break;
+	    continue;
         }
 
         for(r=0;a.isPair() && b.isPair();++r)
