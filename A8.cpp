@@ -6,7 +6,7 @@ unsigned int *tab;
 
 inline void iloczyn()
 {
-    unsigned int *tmp=new unsigned int[k];
+    unsigned int *tmp=new unsigned int[80];
     tmp[0]=0;
     for(unsigned int i=0;i<k;++i)
         tmp[0]+=matrix[i]*tab[i];
