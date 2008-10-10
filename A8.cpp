@@ -1,55 +1,123 @@
 #include <cstdio>
 
-unsigned int matrix[80];
 unsigned int k,m;
-unsigned int *tab;
 
-inline void iloczyn()
+struct matrix
 {
-    unsigned int *tmp=new unsigned int[80];
-    tmp[0]=0;
-    for(unsigned int i=0;i<k;++i)
-        tmp[0]+=matrix[i]*tab[i];
-    for(unsigned int i=1;i<k;++i)
-        tmp[i]=tab[i-1];
+    unsigned int width,height;
+    unsigned int tab[80][80];
 
-    tmp[0]%=1000;
-    delete [] tab;
-    tab=tmp;
+    void clear()
+    {
+        for(unsigned int i=0;i<80;++i)
+            for(unsigned int j=0;j<80;++j)
+                tab[i][j]=0;
+    }
+
+    void operator=(const matrix & co)
+    {
+        width=co.width;
+        height=co.height;
+        for(unsigned int i=0;i<80;++i)
+            for(unsigned int j=0;j<80;++j)
+                tab[i][j]=co.tab[i][j];
+
+    }
+
+    void set()
+    {
+        for(unsigned int i=0;i<80;++i)
+            for(unsigned int j=0;j<80;++j)
+                tab[i][j]=(i==j?1:0);
+    }
+}base_matrix,ext;
+
+matrix * iloczyn(matrix *l,matrix *p)
+{
+    matrix *wynik=new matrix;
+    wynik->width=p->width;
+    wynik->height=l->height;
+
+    for(unsigned int i=0;i<l->height;++i)
+    {
+        for(unsigned int j=0;j<p->width;++j)
+        {
+            wynik->tab[i][j]=0;
+            for(unsigned int q=0;q<l->width;++q)
+            {
+                wynik->tab[i][j]+=((l->tab[i][q])%1000)*((p->tab[q][j])%1000);
+                wynik->tab[i][j]%=1000;
+            }
+        }
+    }
+
+    return wynik;
 }
 
-inline void wypisz(unsigned int p)
+matrix * pow(matrix *l,unsigned int p)
 {
-    unsigned int tmp=tab[p];
-    printf("%u%u%u\n",tmp/100,(tmp%100)/10,tmp%10);
+    matrix *wynik=new matrix;
+    wynik->set();
+    wynik->width=l->width;
+    wynik->height=l->height;
+    matrix *tmp=new matrix;
+    *tmp=*l;
+    matrix *tm2;
+    while(p)
+    {
+        if(p&1)
+        {
+            tm2=wynik;
+            wynik=iloczyn(wynik,tmp);
+            delete tm2;
+        }
+        p>>=1;
+
+        tm2=tmp;
+        tmp=iloczyn(tmp,tmp);
+        delete tm2;
+    }
+    return wynik;
+}
+
+void print(unsigned int l)
+{
+    printf("%u%u%u\n",l/100,(l%100)/10,l%10);
 }
 
 int main()
 {
     unsigned int z;
     scanf("%u",&z);
-    tab=new unsigned int[80];
     while(z--)
     {
-
         scanf("%u%u",&k,&m);
 
         for(unsigned int i=0;i<k;++i)
-            scanf("%u",matrix+i);
-        for(unsigned int i=0;i<k;++i)
-            scanf("%u",tab+i);
+            scanf("%u",&base_matrix.tab[0][i]);
 
-        if(k>=m)
+        base_matrix.width=base_matrix.height=k;
+
+        for(unsigned int i=1;i<k;++i)
         {
-            wypisz(k-m);
-            continue;
+            for(unsigned int j=0;j<k;++j)
+            {
+                base_matrix.tab[i][j]=(i-1==j?1:0);
+            }
         }
 
-        for(unsigned int q=0;q<m-k;++q)
-            iloczyn();
+        for(unsigned int i=0;i<k;++i)
+            scanf("%u",&ext.tab[i][0]);
 
-        wypisz(0);
+        ext.width=1;
+        ext.height=k;
+
+        matrix *wsk=pow(&base_matrix,m-k);
+        matrix *wynik=iloczyn(wsk,&ext);
+
+        print(wynik->tab[0][0]);
+
     }
-
     return 0;
 }
+
