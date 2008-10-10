@@ -89,6 +89,7 @@ int main()
 {
     unsigned int z;
     scanf("%u",&z);
+    matrix *wsk=0,*wynik=0;
     while(z--)
     {
         scanf("%u%u",&k,&m);
@@ -118,11 +119,13 @@ int main()
         ext.width=1;
         ext.height=k;
 
-        matrix *wsk=pow(&base_matrix,m-k);
-        matrix *wynik=iloczyn(wsk,&ext);
+        wsk=pow(&base_matrix,m-k);
+        wynik=iloczyn(wsk,&ext);
 
         print(wynik->tab[0][0]);
 
+        delete wsk;
+        delete wynik;
     }
     return 0;
 }
