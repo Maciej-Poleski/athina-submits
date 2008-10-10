@@ -109,6 +109,12 @@ int main()
         for(unsigned int i=0;i<k;++i)
             scanf("%u",&ext.tab[i][0]);
 
+        if(m<=k)
+        {
+            print(ext.tab[k-m][0]);
+            continue;
+        }
+
         ext.width=1;
         ext.height=k;
 
