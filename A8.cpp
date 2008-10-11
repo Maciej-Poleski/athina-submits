@@ -45,7 +45,7 @@ matrix iloczyn(matrix *l,matrix *p)
             wynik.tab[i][j]=0;
             for(unsigned int q=0;q<l->width;++q)
             {
-                wynik.tab[i][j]+=((l->tab[i][q])%1000)*((p->tab[q][j])%1000);
+                wynik.tab[i][j]+=(l->tab[i][q])*(p->tab[q][j]);
                 wynik.tab[i][j]%=1000;
             }
         }
