@@ -32,21 +32,21 @@ struct matrix
     }
 }base_matrix,ext;
 
-matrix * iloczyn(matrix *l,matrix *p)
+matrix iloczyn(matrix *l,matrix *p)
 {
-    matrix *wynik=new matrix;
-    wynik->width=p->width;
-    wynik->height=l->height;
+    matrix wynik;
+    wynik.width=p->width;
+    wynik.height=l->height;
 
     for(unsigned int i=0;i<l->height;++i)
     {
         for(unsigned int j=0;j<p->width;++j)
         {
-            wynik->tab[i][j]=0;
+            wynik.tab[i][j]=0;
             for(unsigned int q=0;q<l->width;++q)
             {
-                wynik->tab[i][j]+=((l->tab[i][q])%1000)*((p->tab[q][j])%1000);
-                wynik->tab[i][j]%=1000;
+                wynik.tab[i][j]+=((l->tab[i][q])%1000)*((p->tab[q][j])%1000);
+                wynik.tab[i][j]%=1000;
             }
         }
     }
@@ -54,28 +54,23 @@ matrix * iloczyn(matrix *l,matrix *p)
     return wynik;
 }
 
-matrix * pow(matrix *l,unsigned int p)
+matrix pow(matrix *l,unsigned int p)
 {
-    matrix *wynik=new matrix;
-    wynik->set();
-    wynik->width=l->width;
-    wynik->height=l->height;
-    matrix *tmp=new matrix;
-    *tmp=*l;
-    matrix *tm2;
+    matrix wynik;
+    wynik.set();
+    wynik.width=l->width;
+    wynik.height=l->height;
+    matrix tmp;
+    tmp=*l;
     while(p)
     {
         if(p&1)
         {
-            tm2=wynik;
-            wynik=iloczyn(wynik,tmp);
-            delete tm2;
+            wynik=iloczyn(&wynik,&tmp);
         }
         p>>=1;
 
-        tm2=tmp;
-        tmp=iloczyn(tmp,tmp);
-        delete tm2;
+        tmp=iloczyn(&tmp,&tmp);
     }
     return wynik;
 }
@@ -89,13 +84,13 @@ int main()
 {
     unsigned int z;
     scanf("%u",&z);
-    matrix *wsk=0,*wynik=0;
     while(z--)
     {
-        scanf("%u%u",&k,&m);
+        matrix wsk,wynik;
+        scanf("%u%u",&k,&m);;
 
         for(unsigned int i=0;i<k;++i)
-            scanf("%u",&base_matrix.tab[0][i]);
+            scanf("%u",&(base_matrix.tab[0][i]));
 
         base_matrix.width=base_matrix.height=k;
 
@@ -120,12 +115,9 @@ int main()
         ext.height=k;
 
         wsk=pow(&base_matrix,m-k);
-        wynik=iloczyn(wsk,&ext);
+        wynik=iloczyn(&wsk,&ext);
 
-        print(wynik->tab[0][0]);
-
-        delete wsk;
-        delete wynik;
+        print(wynik.tab[0][0]);
     }
     return 0;
 }
