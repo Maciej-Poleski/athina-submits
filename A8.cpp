@@ -82,7 +82,7 @@ void print(unsigned int l)
 
 int main()
 {
-    unsigned int z;
+    unsigned int z,ttt;
     scanf("%u",&z);
     while(z--)
     {
@@ -90,7 +90,10 @@ int main()
         scanf("%u%u",&k,&m);;
 
         for(unsigned int i=0;i<k;++i)
-            scanf("%u",&(base_matrix.tab[0][i]));
+        {
+            scanf("%u",&ttt);
+            base_matrix.tab[0][i]=ttt%1000;
+        }
 
         base_matrix.width=base_matrix.height=k;
 
@@ -103,7 +106,10 @@ int main()
         }
 
         for(unsigned int i=0;i<k;++i)
-            scanf("%u",&ext.tab[i][0]);
+        {
+            scanf("%u",&ttt);
+            ext.tab[i][0]=ttt%1000;
+        }
 
         if(m<=k)
         {
