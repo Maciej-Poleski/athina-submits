@@ -18,8 +18,8 @@ struct matrix
     {
         width=co.width;
         height=co.height;
-        for(unsigned int i=0;i<80;++i)
-            for(unsigned int j=0;j<80;++j)
+        for(unsigned int i=0;i<co.height;++i)
+            for(unsigned int j=0;j<co.width;++j)
                 tab[i][j]=co.tab[i][j];
 
     }
@@ -46,8 +46,8 @@ matrix iloczyn(matrix *l,matrix *p)
             for(unsigned int q=0;q<l->width;++q)
             {
                 wynik.tab[i][j]+=(l->tab[i][q])*(p->tab[q][j]);
-                wynik.tab[i][j]%=1000;
             }
+            wynik.tab[i][j]%=1000;
         }
     }
 
