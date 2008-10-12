@@ -74,8 +74,8 @@ unsigned int mergesort(T *tab,unsigned int l,unsigned int p)
 
 int main()
 {
-    unsigned int z;
-    scanf("%u",&z);
+    unsigned long long z;
+    scanf("%llu",&z);
     while(z--)
     {
 		unsigned int n;
