@@ -90,7 +90,6 @@ int main()
 //		    printf("%d ",tab[i]);
 //		putchar('\n');
 		delete [] tab;
-		printf("%llu",z);
     }
 
     return 0;
