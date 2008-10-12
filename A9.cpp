@@ -1,9 +1,10 @@
 #include <cstdio>
 
 template<class T>
-unsigned int merge(T *tab,unsigned int l,unsigned int s,unsigned int p)
+unsigned long long merge(T *tab,unsigned int l,unsigned int s,unsigned int p)
 {
-    unsigned int wynik=0,lt=l,st=s,pt=p;
+    unsigned int lt=l,st=s,pt=p;
+    unsigned long long wynik=0;
     T *tmp=new T[p-l];
     T *end=tmp+(p-l);
     T *wsk=tmp;
@@ -40,26 +41,27 @@ unsigned int merge(T *tab,unsigned int l,unsigned int s,unsigned int p)
 		    *(wsk++)=tab[st++];
 		}
     }
-    
+
     for(unsigned int i=l;i<p;++i)
 		tab[i]=tmp[i-l];
-		
-//	printf("\tWartości w tablicy tymczasowej dla |l: %u| |s: %u| |p: %u|  Wynik: %u\n\t",l,s,p,wynik); 
-	
+
+//	printf("\tWartości w tablicy tymczasowej dla |l: %u| |s: %u| |p: %u|  Wynik: %u\n\t",l,s,p,wynik);
+
 //	for(unsigned int i=0;i<p-l;++i)
 //		printf("%d ",tmp[i]);
-    
+
 //    putchar('\n');
-    
+
     delete [] tmp;
-    
+
     return wynik;
 }
 
 template<class T>
-unsigned int mergesort(T *tab,unsigned int l,unsigned int p)
+unsigned long long mergesort(T *tab,unsigned int l,unsigned int p)
 {
-    unsigned int s=(l+p)/2,wynik=0;
+    unsigned int s=(l+p)/2;
+    unsigned long long wynik=0;
     if(p-l>1)
     {
 		wynik+=mergesort(tab,l,s);
@@ -74,21 +76,22 @@ unsigned int mergesort(T *tab,unsigned int l,unsigned int p)
 
 int main()
 {
-    unsigned long long z;
+    unsigned int z;
     scanf("%llu",&z);
     while(z--)
     {
 		unsigned int n;
 		scanf("%u",&n);
-		int *tab=new int[n];
+		unsigned int *tab=new unsigned int[n];
 		for(unsigned int i=0;i<n;++i)
-	    	scanf("%d",tab+i);
-		printf("%u\n",mergesort(tab,0,n));
+	    	scanf("%u",tab+i);
+		printf("%llu\n",mergesort(tab,0,n));
 //		for(unsigned int i=0;i<n;++i)
 //		    printf("%d ",tab[i]);
 //		putchar('\n');
 		delete [] tab;
+		printf("%llu",z);
     }
-    
+
     return 0;
 }
