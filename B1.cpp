@@ -4,7 +4,7 @@ using namespace std;
 
 unsigned int zero=0;
 
-template<class T>
+/*template<class T>
 class matrix
 {
     unsigned int height,width;
@@ -33,7 +33,7 @@ class matrix
         return obj[x*width+y];
     }
 };
-
+*/
 /*template<class T>
 class queue
 {
@@ -115,12 +115,13 @@ struct kartez
     kartez() {}
 };
 
-matrix<unsigned int> macierz;
+unsigned int macierz[2000][2000];
 queue<kartez> kolejka;
+unsigned int n,m;
 
 void bfs(unsigned int l=0)
 {
-    if(!kolejka.empty())
+    while(!kolejka.empty())
     {
         unsigned int size=kolejka.size();
         //printf("Rozmiar kolejki: %u\n",size);
@@ -129,26 +130,28 @@ void bfs(unsigned int l=0)
             unsigned int &x=kolejka.front().x;
             unsigned int &y=kolejka.front().y;
 
-          //  printf("%u %u: ",x,y);
-
-            if(macierz(x-1,y)>(l+1))
+            if(x>0)
+            if(macierz[x-1][y]>(l+1))
             {
-                macierz(x-1,y)=l+1;
+                macierz[x-1][y]=l+1;
                 kolejka.push(kartez(x-1,y));
             }
-            if(macierz(x+1,y)>(l+1))
+            if(x<n-1)
+            if(macierz[x+1][y]>(l+1))
             {
-                macierz(x+1,y)=l+1;
+                macierz[x+1][y]=l+1;
                 kolejka.push(kartez(x+1,y));
             }
-            if(macierz(x,y+1)>(l+1))
+            if(y<m-1)
+            if(macierz[x][y+1]>(l+1))
             {
-                macierz(x,y+1)=l+1;
+                macierz[x][y+1]=l+1;
                 kolejka.push(kartez(x,y+1));
             }
-            if(macierz(x,y-1)>(l+1))
+            if(y>0)
+            if(macierz[x][y-1]>(l+1))
             {
-                macierz(x,y-1)=l+1;
+                macierz[x][y-1]=l+1;
                 kolejka.push(kartez(x,y-1));
             }
 
@@ -156,7 +159,7 @@ void bfs(unsigned int l=0)
 
             kolejka.pop();
         }
-        bfs(++l);
+        ++l;
     }
 }
 
@@ -167,31 +170,24 @@ int main()
     scanf("%u",&z);
     while(z--)
     {
-    unsigned int n,m;
     scanf("%u%u",&n,&m);
-    macierz.set(n,m);
     for(unsigned int i=0;i<n;++i)
     {
         getchar();
         for(unsigned int j=0;j<m;++j)
         {
-            macierz(i,j)=getchar()-'1';
-            if(macierz(i,j)==0)
+            macierz[i][j]=getchar()-'1';
+            if(macierz[i][j]==0)
                 kolejka.push(kartez(i,j));
         }
     }
-    //while(!kolejka.empty())
-    //{
-     //   printf("%u %u\n",kolejka.top().x,kolejka.top().y);
-      //  kolejka.pop();
-    //}
     bfs();
 
     for(unsigned int i=0;i<n;++i)
     {
         for(unsigned int j=0;j<m;++j)
         {
-            printf("%u ",macierz(i,j));
+            printf("%u ",macierz[i][j]);
         }
         putchar('\n');
     }
