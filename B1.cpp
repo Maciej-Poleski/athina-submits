@@ -1,4 +1,6 @@
 #include <cstdio>
+#include <queue>
+using namespace std;
 
 unsigned int zero=0;
 
@@ -32,7 +34,7 @@ class matrix
     }
 };
 
-template<class T>
+/*template<class T>
 class queue
 {
     class key
@@ -44,11 +46,11 @@ class queue
         key() : next(0),back(0) {}
     };
     key *begin,*end;
-    unsigned int size;
+    unsigned int s;
 
     public:
 
-    queue() : begin(0),end(0),size(0) {}
+    queue() : begin(0),end(0),s(0) {}
 
     void push(T obj)
     {
@@ -67,7 +69,7 @@ class queue
             end->next=end->back=0;
 
         }
-        ++size;
+        ++s;
     }
 
     void pop()
@@ -84,12 +86,12 @@ class queue
                 delete begin;
                 begin=end=0;
             }
-            --size;
+            --s;
         }
         else
             printf("Usuwam nieistniej�cy obiekt!\n");
     }
-    T &top()
+    T &front()
     {
         return begin->obj;
     }
@@ -100,11 +102,11 @@ class queue
         return false;
         return true;
     }
-    unsigned int s()
+    unsigned int size()
     {
-        return size;
+        return s;
     }
-};
+};*/
 
 struct kartez
 {
@@ -120,12 +122,12 @@ void bfs(unsigned int l=0)
 {
     if(!kolejka.empty())
     {
-        unsigned int size=kolejka.s();
+        unsigned int size=kolejka.size();
         //printf("Rozmiar kolejki: %u\n",size);
         for(unsigned int i=0;i<size;++i)
         {
-            unsigned int &x=kolejka.top().x;
-            unsigned int &y=kolejka.top().y;
+            unsigned int &x=kolejka.front().x;
+            unsigned int &y=kolejka.front().y;
 
           //  printf("%u %u: ",x,y);
 
