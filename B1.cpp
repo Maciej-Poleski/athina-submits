@@ -110,12 +110,55 @@ class queue
 
 struct kartez
 {
-    unsigned int x,y;
-    kartez(unsigned int q,unsigned int w) :x(q),y(w) {}
+    unsigned short x,y;
+    kartez(unsigned short q,unsigned short w) :x(q),y(w) {}
     kartez() {}
 };
 
-unsigned int macierz[2000][2000];
+/*template <class T>
+class queue
+{
+    T *obj;
+    T *begin,*end;
+
+    public:
+
+    queue()
+    {
+        obj=new kartez[2000*2000];
+        begin=end=obj;
+    }
+
+    void push(T o)
+    {
+        *(++end)=o;
+    }
+    void pop()
+    {
+        ++begin;
+    }
+    T &front()
+    {
+        return *begin;
+    }
+
+    bool empty()
+    {
+        return begin==end;
+    }
+
+    void clear()
+    {
+        begin=end=obj;
+    }
+
+    unsigned int size()
+    {
+        return end-begin;
+    }
+};*/
+
+unsigned short macierz[2000][2000];
 queue<kartez> kolejka;
 unsigned int n,m;
 
@@ -127,8 +170,8 @@ void bfs(unsigned int l=0)
         //printf("Rozmiar kolejki: %u\n",size);
         for(unsigned int i=0;i<size;++i)
         {
-            unsigned int &x=kolejka.front().x;
-            unsigned int &y=kolejka.front().y;
+            unsigned short &x=kolejka.front().x;
+            unsigned short &y=kolejka.front().y;
 
             if(x>0)
             if(macierz[x-1][y]>(l+1))
@@ -191,6 +234,7 @@ int main()
         }
         putchar('\n');
     }
+    //kolejka.clear();
     }
     return 0;
 }
