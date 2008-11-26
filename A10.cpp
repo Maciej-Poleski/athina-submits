@@ -25,6 +25,11 @@ void swap(T &l,T &p)
     p=tmp;
 }*/
 
+inline long long pow(int o)
+{
+    return static_cast<long long>(o)*static_cast<long long>(o);
+}
+
 struct kartez
 {
     int x,y;
@@ -45,8 +50,8 @@ struct kartez
     
     long long operator-(const kartez &o) const
     {
-        unsigned long long e1=(max(x,o.x)-min(x,o.x));
-        unsigned long long e2=(max(y,o.y)-min(y,o.y));
+        long long e1=(max(x,o.x)-min(x,o.x));
+        long long e2=(max(y,o.y)-min(y,o.y));
         e1*=e1;
         e2*=e2;
         return e1+e2; 
@@ -69,14 +74,15 @@ long long find_minimum(unsigned int begin,unsigned int end)
     if(size>3)
     {
         unsigned int s=(end+begin)/2;
+        int xs;
         //unsigned char nieparzysta=(end-begin)&1;
         long long a,b;
-        kartez *yp,ys,*ypi;
+        kartez *yp,*ypi;
         kartez *we=x+end;
         kartez *w1=x+begin;
         //yli=yl=new kartez [size/2];
         //ypi=yp=new kartez [size/2+nieparzysta];
-        ys=x[s];
+        xs=x[s].x;
         /*for(unsigned int i=0;i<size;++i)
         {
             if(y[i]<ys)
@@ -149,7 +155,7 @@ long long find_minimum(unsigned int begin,unsigned int end)
         
         for(w1=x+begin;w1!=we;++w1)
         {
-            if(static_cast<long long>(w1->x)>static_cast<long long>(ys.x)-a and static_cast<long long>(w1->x)<static_cast<long long>(ys.x)+a)
+            if(pow(w1->x-xs)<a)
             {
                 *(ypi++)=*w1;
             }
