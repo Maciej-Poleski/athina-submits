@@ -104,6 +104,8 @@ struct sumTree
     
     unsigned int suma(unsigned int begin,unsigned int end)
     {
+        if(end==-1)
+            end=0;
         if(begin==end)
             return tab[size+begin-1];
         if(begin>end)
@@ -215,8 +217,9 @@ int main()
             }
             else
             {
-                printf("Koniec stadionu %d: x: %d | y1: %d | y2: %d\n",stuff[i].wsp.y,stuff[i].wsp.x,stadion[stuff[i].wsp.y].y1,stadion[stuff[i].wsp.y].y2);
+                printf("Koniec stadionu %d: x: %d | y1: %d | y2: %d",stuff[i].wsp.y,stuff[i].wsp.x,stadion[stuff[i].wsp.y].y1,stadion[stuff[i].wsp.y].y2);
             }
+            printf("   %u %u\n",i,size);
         }*/
         //puts("a");
         drzewo=new sumTree(sizey);
@@ -229,15 +232,18 @@ int main()
                 {
                     case obiekt::stadionB:
                         nr=stadion+wsk->wsp.y;
+                        //printf("Początek %u %u %u\n",nr-stadion,lower_bound(y,w,nr->y1)-y,upper_bound(y,w,nr->y2)-y-1);
                         nr->suma=drzewo->suma(lower_bound(y,w,nr->y1)-y,upper_bound(y,w,nr->y2)-y-1);
                         //printf("Początek\n");
                         break;
                     case obiekt::stadionE:
+                        //printf("Koniec\n");
                         nr=stadion+wsk->wsp.y;
                         nr->suma=drzewo->suma(lower_bound(y,w,nr->y1)-y,upper_bound(y,w,nr->y2)-y-1)-nr->suma;
                         //printf("Koniec\n");
                         break;
                     default:
+                        //printf("Drzewo\n");
                         drzewo->inc(lower_bound(y,w,wsk->wsp.y)-y);
                         break;
                 }/*
@@ -246,10 +252,12 @@ int main()
                     printf("%u ",drzewo->tab[i]);
                 }
                 putchar('\n');*/
+                //puts("A");
             }
         }
         //puts("b");
         //puts("c");
+        //printf("%u %u %u %u %u\n",sizeof(*stuff)*size,sizeof(*drzewo)+sizeof(drzewo->tab)*drzewo->tabSize,sizeof(*y)*sizey,sizeof(*stadion)*m,sizeof(*stuff)*size+sizeof(*drzewo)+sizeof(drzewo->tab)*drzewo->tabSize+sizeof(*y)*sizey+sizeof(*stadion)*m);
         delete [] stuff;
         delete drzewo;
         delete [] y;
