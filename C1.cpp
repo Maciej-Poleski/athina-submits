@@ -22,6 +22,8 @@ unsigned int mpow2(unsigned int n)
     return wynik;
 }
 
+unsigned int n,m,size,sizey;
+
 struct kartez
 {
     int x,y;
@@ -102,10 +104,8 @@ struct sumTree
         add1(size+n-1);
     }
     
-    unsigned int suma(unsigned int begin,unsigned int end)
+    unsigned int suma(int begin,int end)
     {
-        if(end==-1)
-            end=0;
         if(begin==end)
             return tab[size+begin-1];
         if(begin>end)
@@ -142,10 +142,10 @@ sumTree *drzewo;
 obiekt *stuff;
 stadiony *stadion;
 int *y;
-unsigned int n,m,size,sizey;
 
 int main()
 {
+#ifndef debug
     /*sumTree drzewo(8);
     drzewo.inc(0);
     drzewo.inc(4);
@@ -266,9 +266,11 @@ int main()
             printf("%u\n",wsk->suma);
         }
         delete [] stadion;
-    }/*
+    }
+#else
     int tab[]={-2,-1,0,2,5,6,9};
     const unsigned int size=sizeof(tab)/sizeof(int);
-    printf("%u %u\n",lower_bound(tab,tab+size,3)-tab,upper_bound(tab,tab+size,99)-tab-1);*/
+    printf("%d %d\n",lower_bound(tab,tab+size,-4)-tab,upper_bound(tab,tab+size,-4)-tab-1);
+#endif
     return 0;
 }
