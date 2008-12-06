@@ -102,10 +102,11 @@ void swap(T &a,T &b)
 vector<unsigned int> wynik[3];
 node *pracownik;
 unsigned int n;
+bool ok;
 
 void dfs(unsigned int k,node::opcje typ)
 {
-	if(pracownik[k].typ==typ)
+	if(pracownik[k].typ==typ || !ok)
 		return;
 	else if(pracownik[k].typ==node::unknown)
 	{
@@ -138,7 +139,9 @@ void dfs(unsigned int k,node::opcje typ)
 	else
 	{
 		//printf("Pracownik %u\n",k);
-		throw 2;
+		//throw 2;
+		ok=false;
+		return;
 	}
 }
 
@@ -173,9 +176,19 @@ int main()
 		}
 		try
 		{
+			ok=true;
 			dfs(k,node::kam);
 		}
 		catch(...)
+		{
+			puts("NIE");
+			delete [] pracownik;
+			wynik[0].clear();
+			wynik[1].clear();
+			wynik[2].clear();
+			continue;
+		}
+		if(!ok)
 		{
 			puts("NIE");
 			delete [] pracownik;
