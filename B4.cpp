@@ -178,6 +178,10 @@ int main()
 		catch(...)
 		{
 			puts("NIE");
+			delete [] pracownik;
+			wynik[0].clear();
+			wynik[1].clear();
+			wynik[2].clear();
 			continue;
 		}
 		delete [] pracownik;
