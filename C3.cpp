@@ -45,7 +45,7 @@ class intTree
 		
 		size_t v;
 		
-		if(((n<<1)|1)<stab)
+		if(((n<<1)|1)<=stab)
 			v=tab[n].pokrycie-(tab[n<<1].pokrycie+tab[(n<<1)|1].pokrycie);
 		else
 			v=tab[n].pokrycie;
@@ -276,7 +276,6 @@ int main()
 		#ifdef dump_space2D
 		for(size_t i=0;space2D+i<space2DE;++i)
 		{
-			printf("%u ",i);
 			if(space2D[i].y1<space2D[i].y2)
 			{
 				printf("Początek: x %d\t| y1 %d\t| y2 %d\n",space2D[i].x,space2D[i].y1,space2D[i].y2);
@@ -293,7 +292,6 @@ int main()
 		
 		for(size_t i=0;space2DB!=space2DE;++space2DB,++i)
 		{
-			fflush(stdout);
 			if(space2DB->x!=x)
 			{
 				wynik+=space1D.get_overlay()*(space2DB->x-x);
