@@ -132,7 +132,7 @@ class intTree
 			sub(lower_bound(eY,eeY,l)-eY+size,lower_bound(eY,eeY,r)-eY+size);
 		}
 		
-		size_t get_overlay() const
+		uint64_t get_overlay() const
 		{
 			return (tab+1)->pokrycie;
 		}
