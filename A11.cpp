@@ -26,12 +26,14 @@ inline uint32_t quicksort_partition(uint32_t l,uint32_t r)
 	do
 	{
 		do
+		{
 			++i;
-		while(A[i]<v);
+		} while(i<=r && A[i]<v);
 		
 		do
+		{
 			--j;
-		while(A[j]>v);
+		} while(j>=1 && A[j]>v);
 		
 		if(i<j)
 			swap(A[i],A[j]);
