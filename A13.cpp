@@ -151,6 +151,8 @@ int main()
 		
 		for(size_t *i=matryca,*end=matryca+n;i!=end;++i)
 			printf("%u\n",*i);
+		
+		delete [] matryca;
 	}
 	return 0;
 }
