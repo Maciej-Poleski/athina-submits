@@ -1,8 +1,5 @@
 #include <cstdio>
 #include <stdint.h>
-#include <iostream>
-
-//#define emulate_heap
 
 template<class T>
 void swap (T&a,T&b)
@@ -19,8 +16,6 @@ struct heap
 	size_t	size;
 
 	public:
-		
-#ifndef emulate_heap
 
 	heap(T *w,size_t s): tab(w),size(s)
 	{
@@ -90,37 +85,6 @@ struct heap
 		return tab[1];
 	}
 	
-#else
-	
-	heap(T *w,size_t s): tab(w),size(s)
-	{
-		--tab;
-	}
-
-	~heap()
-	{
-		delete [] ++tab;
-	}
-
-	void rebuild_tree()
-	{
-	}
-	
-	void rebuild_down(size_t n)
-	{
-	}
-	
-	T & max()
-	{
-		size_t i=1;
-		for(size_t j=2;j<=size;++j)
-			if(tab[i]<tab[j])
-				i=j;
-		return tab[i];
-	}
-	
-#endif
-	
 	void dump_tab()
 	{
 		printf("Size: %u\n",size);
@@ -135,15 +99,15 @@ struct heap
 struct komitet
 {
 	uint64_t	l;	//g�osy
+	size_t		d;	//dzielnik
 	size_t		i;	//nr
 	size_t		m;	//ilo�� mandat�w
 	
-	komitet(): m(0) {}
+	komitet(): d(1), m(0) {}
 	
 	bool operator<(const komitet &o) const
 	{
-		//std::clog<<l*o.d<<' '<<o.l*d<<std::endl;
-		return l*(o.m+1)<o.l*(m+1) || (l*(o.m+1)==o.l*(m+1) && (l<o.l || (l==o.l && i>o.i)));
+		return l*o.d<o.l*d || (l*o.d==o.l*d && (l<o.l || (l==o.l && i>o.i)));
 	}
 };
 	
@@ -164,7 +128,7 @@ int main()
 		
 		for(komitet *wsk=tab,*end=tab+n;wsk!=end;++wsk,++i)
 		{
-			scanf("%u",&(wsk->l));
+			scanf("%llu",&(wsk->l));
 			wsk->i=i;
 		}
 		
@@ -175,6 +139,7 @@ int main()
 		for(uint32_t i=0;i<m;++i)
 		{
 			++kopiec.max().m;
+			++kopiec.max().d;
 			//printf("Komitet %u ma teraz %u mandat�w\n",kopiec.max().i,kopiec.max().m);
 			kopiec.rebuild_tree();
 		}
