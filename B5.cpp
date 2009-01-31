@@ -94,7 +94,7 @@ struct heap
 		printf("Size: %u\n",size);
 		for(size_t i=1;i<=size;++i)
 		{
-			printf("v: %d | waga: %llu\n",tab[i].wsk-w,tab[i].min);
+			printf("v: %d | waga: %llu | reszta: %u\n",tab[i].wsk-w,tab[i].min,tab[i].r);
 		}
 		putchar('\n');
 	}
@@ -126,7 +126,10 @@ struct heap
 	T extract_min()
 	{
 		T tmp=tab[1];
-		tab[1]=tab[size--];
+		tab[1]=tab[size];
+		tab[1].wsk->i[tab[1].r]=1;
+		tab[size].wsk->i[tab[size].r]=size;
+		--size;
 		rebuild_tree();
 		return tmp;
 	}
@@ -140,7 +143,7 @@ struct heap
 
 struct edge
 {
-	uint32_t	w;	//Waga
+	uint64_t	w;	//Waga
 	uint32_t	d;	//Cel
 	
 	edge() {}
@@ -262,7 +265,7 @@ int main()
 			//bool push=false;
 			for(vector<edge>::iterator i=wsk->edges.begin(),e=wsk->edges.end();i!=e;++i)
 			{
-				uint64_t r=(m+i->w)%k;				//Reszta do celu włącznie
+				uint32_t r=(m+i->w)%k;				//Reszta do celu włącznie
 				if(node[i->d].k[r]>m+i->w)
 				{
 					node[i->d].k[r]=m+(i->w);
@@ -277,7 +280,7 @@ int main()
 					{
 						//printf("wrzut\n");
 						node[i->d].heap[r]=true;
-						kopiec.insert(label(m+i->w,&node[i->d],(r+rr)%k));
+						kopiec.insert(label(m+i->w,&node[i->d],r));
 					}
 				//	kopiec.dump_tab(node);
 				//	printf("Poprawka v: %u | d: %llu\n",kopiec.tab[node[i->d].i[r]].wsk-node,kopiec.tab[node[i->d].i[r]].min);
