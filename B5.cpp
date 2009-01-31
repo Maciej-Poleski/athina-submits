@@ -7,6 +7,8 @@ using namespace std;
 const uint64_t	inf=0xffffffffffffffffll-1000005ll;
 uint32_t		k;					//k
 
+struct vertex;
+
 template<class T>
 struct heap
 {
@@ -27,7 +29,7 @@ struct heap
 		delete [] ++tab;
 	}
 
-	void rebuild_tree()
+	void rebuild_tree()								//Ta funkcja nie jest generyczna!!!
 	{
 		size_t	n=1;
 		size_t	i;
@@ -44,6 +46,8 @@ struct heap
 			{
 				//printf("Zamianiam komitet %u i %u\n",tab[n].i+1,tab[i].i+1);
 				swap(tab[n],tab[i]);
+				tab[i].wsk->i[tab[i].r]=i;
+				tab[n].wsk->i[tab[i].r]=n;
 				n=i;
 			}
 			else
@@ -52,7 +56,7 @@ struct heap
 		//puts("E");
 	}
 	
-	void rebuild_down(size_t n)
+	void rebuild_down(size_t n)						//Ta funkcja nie jest generyczna!!!
 	{
 		size_t i;
 		//printf("Rebuild dla %u\n",n);
@@ -68,6 +72,8 @@ struct heap
 			{
 				//printf("Zamianiam komitet %u i %u\n",tab[n].i+1,tab[i].i+1);
 				swap(tab[n],tab[i]);
+				tab[i].wsk->i[tab[i].r]=i;
+				tab[n].wsk->i[tab[i].r]=n;
 				n=i;
 			}
 			else
@@ -83,28 +89,32 @@ struct heap
 		return tab[1];
 	}
 	
-	void dump_tab()
+	void dump_tab(vertex *w)
 	{
 		printf("Size: %u\n",size);
 		for(size_t i=1;i<=size;++i)
 		{
-			printf("%d ",tab[i]);
+			printf("v: %d | waga: %llu\n",tab[i].wsk-w,tab[i].min);
 		}
 		putchar('\n');
 	}
 	
 	//	v2:
 	
-	size_t rebuild_up(size_t n)
+	size_t rebuild_up(size_t n)					//Ta funkcja nie jest generyczna!!!
 	{
 		size_t i=n;
 		T tmp=tab[n];
 		while((i>>1) && tmp<tab[i>>1])
 		{
 			tab[i]=tab[i>>1];
+			tab[i].wsk->i[tab[i].r]=i;
+			//printf("Kopiec: %u zastępuje %u\n",i>>1,i);
 			i>>=1;
 		}
 		tab[i]=tmp;
+		tab[i].wsk->i[tab[i].r]=i;
+		//printf("Kopiec: %u zastępuje %u\n",i>>1,i);
 		return i;
 	}
 	
@@ -141,23 +151,28 @@ struct edge
 struct vertex
 {
 	uint64_t			min;	//Najlżejsza droga po wszystkich modułach z k z this
-	size_t				i;		//Indeks label w kopcu
+	size_t				*i;		//Indeks label w kopcu
 	uint64_t			*k;		//Najlżejsze moduły do this wierzchołka
-	vector<edge>			edges;	//Krawędzie
-	bool				heap;	//Jest w kopcu
+	vector<edge>		edges;	//Krawędzie
+	bool				*heap;	//Jest w kopcu
 	
 	vertex()
 	{
 		k=new uint64_t[::k];
+		heap=new bool[::k];
+		i=new size_t[::k];
 		min=inf;
-		heap=false;
 		for(uint64_t *wsk=k,*end=k+::k;wsk!=end;++wsk)
 			*wsk=inf;
+		for(bool *wsk=heap,*end=heap+::k;wsk!=end;++wsk)
+			*wsk=false;
 	}
 	
 	~vertex()
 	{
 		delete [] k;
+		delete [] heap;
+		delete [] i;
 	}
 };
 
@@ -165,10 +180,11 @@ struct label
 {
 	uint64_t	min;		//Najlżejsza droga po wszystkich modułach z k z wsk 
 	vertex*		wsk;		//Wskaźnik do wierzchołka
+	uint32_t	r;
 	
 	label() {}
 	
-	label(uint64_t m,vertex* w) : min(m),wsk(w) {}
+	label(uint64_t m,vertex* w,uint32_t rr) : min(m),wsk(w),r(rr) {}
 	
 	bool operator<(const label &o) const
 	{
@@ -217,11 +233,11 @@ int main()
 		
 		node[n].min=0;
 		node[n].k[0]=0;
-		node[n].i=1;
-		node[n].heap=true;
+		node[n].i[0]=1;
+		node[n].heap[0]=true;
 		
-		label * tab=new label[n+2];
-		*tab=label(0,node+n);
+		label * tab=new label[n*k];
+		*tab=label(0,node+n,0);
 		
 		heap<label> kopiec(tab,1);
 		
@@ -229,45 +245,48 @@ int main()
 		
 		while(kopiec.size)
 		{
-			vertex *wsk=kopiec.extract_min().wsk;
-			wsk->heap=false;
-			bool push=false;
+			vertex *wsk;
+			uint64_t m;
+			uint32_t rr;
+			{
+				label tmp=kopiec.extract_min();
+				wsk=tmp.wsk;					//This
+				m=tmp.min;						//Droga do this wierzchołka
+				rr=tmp.r;
+				//printf("%llu ",m);
+			}
+			
+			//printf("Dijkstra v: %u | d: %llu | r: %llu\n",wsk-node,m,m%k);
+				
+			wsk->heap[rr]=false;
+			//bool push=false;
 			for(vector<edge>::iterator i=wsk->edges.begin(),e=wsk->edges.end();i!=e;++i)
 			{
-				for(uint64_t *w3=wsk->k,*w3e=wsk->k+::k;w3!=w3e;++w3)
+				uint64_t r=(m+i->w)%k;				//Reszta do celu włącznie
+				if(node[i->d].k[r]>m+i->w)
 				{
-					uint64_t	t2=((*w3)+i->w);
-					uint64_t	t3=(t2)%(::k);
-					
-					if(node[i->d].k[t3]>t2)
+					node[i->d].k[r]=m+(i->w);
+					//printf("Poprawka v: %u | d: %llu ",i->d,node[i->d].k[r]);
+					if(node[i->d].heap[r])
 					{
-						uint64_t *w2=&(node[i->d].k[t3]);
-						push=true;
-						*w2=((*w3)+i->w);
-						if(*w2<node[i->d].min)
-						{
-							node[i->d].min=*w2;
-						}
+						//printf("modyfikacja %u\n",node[i->d].i[r]);
+						kopiec.tab[node[i->d].i[r]].min=m+i->w;
+						kopiec.rebuild_up(node[i->d].i[r]);
 					}
-				}
-				if(push)
-				{
-					if(node[i->d].heap && kopiec.tab[node[i->d].i].min>node[i->d].min)
+					else
 					{
-						kopiec.tab[node[i->d].i].min=node[i->d].min;
-						node[i->d].i=kopiec.rebuild_up(node[i->d].i);
+						//printf("wrzut\n");
+						node[i->d].heap[r]=true;
+						kopiec.insert(label(m+i->w,&node[i->d],r));
 					}
-					else if(!node[i->d].heap)
-					{
-						node[i->d].i=kopiec.insert(label(node[i->d].min,node+i->d));
-						node[i->d].heap=true;
-					}
-					push=false;
+					//kopiec.dump_tab(node);
+					//printf("Poprawka v: %u | d: %llu\n",kopiec.tab[node[i->d].i[r]].wsk-node,kopiec.tab[node[i->d].i[r]].min);
 				}
 			}
 		}
 		//uint32_t aa=1;
 		/*
+		putchar('\n');
 		for(int i=1;i<=n;++i)
 		{
 			printf("%u|",i);
