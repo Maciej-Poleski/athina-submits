@@ -47,7 +47,7 @@ struct heap
 				//printf("Zamianiam komitet %u i %u\n",tab[n].i+1,tab[i].i+1);
 				swap(tab[n],tab[i]);
 				tab[i].wsk->i[tab[i].r]=i;
-				tab[n].wsk->i[tab[i].r]=n;
+				tab[n].wsk->i[tab[n].r]=n;
 				n=i;
 			}
 			else
@@ -151,7 +151,7 @@ struct edge
 struct vertex
 {
 	uint64_t			min;	//Najlżejsza droga po wszystkich modułach z k z this
-	size_t				*i;		//Indeks label w kopcu
+	uint64_t			*i;		//Indeks label w kopcu
 	uint64_t			*k;		//Najlżejsze moduły do this wierzchołka
 	vector<edge>		edges;	//Krawędzie
 	bool				*heap;	//Jest w kopcu
@@ -160,7 +160,7 @@ struct vertex
 	{
 		k=new uint64_t[::k];
 		heap=new bool[::k];
-		i=new size_t[::k];
+		i=new uint64_t[::k];
 		min=inf;
 		for(uint64_t *wsk=k,*end=k+::k;wsk!=end;++wsk)
 			*wsk=inf;
@@ -180,7 +180,7 @@ struct label
 {
 	uint64_t	min;		//Najlżejsza droga po wszystkich modułach z k z wsk 
 	vertex*		wsk;		//Wskaźnik do wierzchołka
-	uint32_t	r;
+	uint64_t	r;
 	
 	label() {}
 	
@@ -279,8 +279,8 @@ int main()
 						node[i->d].heap[r]=true;
 						kopiec.insert(label(m+i->w,&node[i->d],r));
 					}
-					//kopiec.dump_tab(node);
-					//printf("Poprawka v: %u | d: %llu\n",kopiec.tab[node[i->d].i[r]].wsk-node,kopiec.tab[node[i->d].i[r]].min);
+				//	kopiec.dump_tab(node);
+				//	printf("Poprawka v: %u | d: %llu\n",kopiec.tab[node[i->d].i[r]].wsk-node,kopiec.tab[node[i->d].i[r]].min);
 				}
 			}
 		}
