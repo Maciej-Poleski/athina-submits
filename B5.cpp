@@ -73,7 +73,7 @@ struct heap
 				//printf("Zamianiam komitet %u i %u\n",tab[n].i+1,tab[i].i+1);
 				swap(tab[n],tab[i]);
 				tab[i].wsk->i[tab[i].r]=i;
-				tab[n].wsk->i[tab[i].r]=n;
+				tab[n].wsk->i[tab[n].r]=n;
 				n=i;
 			}
 			else
