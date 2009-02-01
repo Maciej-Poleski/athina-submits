@@ -12,11 +12,11 @@ struct edge
 	edge(uint32_t dd,bool *vv) : d(dd),v(vv) {}
 };
 
-vector<edge>		graf[50001];
+vector<edge>		*graf;
 bool				*leak;
 stack<uint32_t>		stos;
-bool				v[50001];
-bool				v2[500001];
+bool				*v;
+bool				*v2;
 uint32_t			n;
 uint32_t			suma=0;
 
@@ -63,10 +63,15 @@ int main()
 		uint32_t	t;
 		uint32_t	x;
 		uint32_t	y;
-		for(bool *i=v,*e=v+n+1;i!=e;++i)
-			*i=false;
 		
 		scanf("%u%u",&n,&m);
+		
+		graf=new vector<edge>[n+1];
+		v=new bool[n+1];
+		v2=new bool[m+1];
+		
+		for(bool *i=v,*e=v+n+1;i!=e;++i)
+			*i=false;
 		t=m;
 		while(m)
 		{
@@ -78,6 +83,7 @@ int main()
 		}
 		
 		dfs();
+		delete [] v;
 		
 		//printf("%u\n",suma);
 		stos.push(0);
@@ -85,6 +91,8 @@ int main()
 		if(suma==0)
 		{
 			dfs2(1);
+			delete [] v2;
+			delete [] graf;
 			printf("1\n%u",t+1);
 			t=stos.top();
 			while(stos.size()!=1)
@@ -100,6 +108,11 @@ int main()
 			stack<uint32_t>	stos2;
 			printf("%u\n",suma>>1);
 			dfs2();
+			delete [] v2;
+			for(vector<edge>::iterator i=graf[0].begin(),e=graf[0].end();i!=e;++i)
+				delete i->v;
+			delete [] graf;
+			
 			while(stos.size()!=1)
 			{
 				stos.pop();
@@ -131,11 +144,11 @@ int main()
 		}
 		putchar('\n');*/
 		
-		for(vector<edge>::iterator i=graf[0].begin(),e=graf[0].end();i!=e;++i)
-			delete i->v;
+		//for(vector<edge>::iterator i=graf[0].begin(),e=graf[0].end();i!=e;++i)
+		//	delete i->v;
 		
-		for(vector<edge> *i=graf,*e=graf+n+1;i!=e;++i)
-			i->clear();
+		//for(vector<edge> *i=graf,*e=graf+n+1;i!=e;++i)
+			//i->clear();
 		
 		suma=0;
 	}
