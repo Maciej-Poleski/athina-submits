@@ -14,131 +14,132 @@ struct heap
 {
 	T		*tab;
 	size_t	size;
-
+	
 	public:
-
-	heap(T *w,size_t s): tab(w),size(s)
-	{
-		--tab;
-		for(size_t i=s>>1;i>0;--i)
-			rebuild_down(i);
-	}
-
-	~heap()
-	{
-		delete [] ++tab;
-	}
-
-	void rebuild_tree()								//Ta funkcja nie jest generyczna!!!
-	{
-		size_t	n=1;
-		size_t	i;
-		//printf("Rebuild dla %u\n",n);
-		while((n<<1)<=size)
+		
+		heap(T *w,size_t s): tab(w),size(s)
 		{
-			//puts("A");
-			i=n;
-			if(tab[i<<1]<tab[i])
-				i<<=1;
-			if(((n<<1)|1)<=size && tab[(n<<1)|1]<tab[i])
-				i=(n<<1)|1;
-			if(tab[i]<tab[n])
+			--tab;
+			for(size_t i=s>>1;i>0;--i)
+				rebuild_down(i);
+		}
+		
+		~heap()
+		{
+			delete [] ++tab;
+		}
+		
+		void rebuild_tree()								//Ta funkcja nie jest generyczna!!!
+		{
+			size_t	n=1;
+			size_t	i;
+			//printf("Rebuild dla %u\n",n);
+			while((n<<1)<=size)
 			{
-				//printf("Zamianiam komitet %u i %u\n",tab[n].i+1,tab[i].i+1);
-				swap(tab[n],tab[i]);
+				//puts("A");
+				i=n;
+				if(tab[i<<1]<tab[i])
+					i<<=1;
+				if(((n<<1)|1)<=size && tab[(n<<1)|1]<tab[i])
+					i=(n<<1)|1;
+				if(tab[i]<tab[n])
+				{
+					//printf("Zamianiam komitet %u i %u\n",tab[n].i+1,tab[i].i+1);
+					swap(tab[n],tab[i]);
+					tab[i].wsk->i[tab[i].r]=i;
+					tab[n].wsk->i[tab[n].r]=n;
+					n=i;
+				}
+				else
+					break;
+			}
+			//puts("E");
+		}
+		
+		void rebuild_down(size_t n)						//Ta funkcja nie jest generyczna!!!
+		{
+			size_t i;
+			//printf("Rebuild dla %u\n",n);
+			while((n<<1)<=size)
+			{
+				//puts("A");
+				i=n;
+				if(tab[i<<1]<tab[i])
+					i<<=1;
+				if(((n<<1)|1)<=size && tab[(n<<1)|1]<tab[i])
+					i=(n<<1)|1;
+				if(tab[i]<tab[n])
+				{
+					//printf("Zamianiam komitet %u i %u\n",tab[n].i+1,tab[i].i+1);
+					swap(tab[n],tab[i]);
+					tab[i].wsk->i[tab[i].r]=i;
+					tab[n].wsk->i[tab[n].r]=n;
+					n=i;
+				}
+				else
+				{
+					break;
+				}
+			}
+			//puts("E");
+		}
+		
+		T & max()
+		{
+			return tab[1];
+		}
+		
+		void dump_tab(vertex *w)
+		{
+			printf("Size: %u\n",size);
+			for(size_t i=1;i<=size;++i)
+			{
+				printf("v: %d | waga: %llu | reszta: %u | dowiazanie wierzcholka %u\n",tab[i].wsk-w,tab[i].min,tab[i].r,w[tab[i].wsk-w].i[tab[i].r]);
+			}
+			putchar('\n');
+		}
+		
+		//	v2:
+		
+		size_t rebuild_up(size_t n)					//Ta funkcja nie jest generyczna!!!
+		{
+			size_t i=n;
+			T tmp=tab[n];
+			while((i>>1) && tmp<tab[i>>1])
+			{
+				tab[i]=tab[i>>1];
 				tab[i].wsk->i[tab[i].r]=i;
-				tab[n].wsk->i[tab[n].r]=n;
-				n=i;
+				//printf("Kopiec: %u zastępuje %u\n",i>>1,i);
+				i>>=1;
 			}
-			else
-				break;
-		}
-		//puts("E");
-	}
-	
-	void rebuild_down(size_t n)						//Ta funkcja nie jest generyczna!!!
-	{
-		size_t i;
-		//printf("Rebuild dla %u\n",n);
-		while((n<<1)<=size)
-		{
-			//puts("A");
-			i=n;
-			if(tab[i<<1]<tab[i])
-				i<<=1;
-			if(((n<<1)|1)<=size && tab[(n<<1)|1]<tab[i])
-				i=(n<<1)|1;
-			if(tab[i]<tab[n])
-			{
-				//printf("Zamianiam komitet %u i %u\n",tab[n].i+1,tab[i].i+1);
-				swap(tab[n],tab[i]);
-				tab[i].wsk->i[tab[i].r]=i;
-				tab[n].wsk->i[tab[n].r]=n;
-				n=i;
-			}
-			else
-			{
-				break;
-			}
-		}
-		//puts("E");
-	}
-	
-	T & max()
-	{
-		return tab[1];
-	}
-	
-	void dump_tab(vertex *w)
-	{
-		printf("Size: %u\n",size);
-		for(size_t i=1;i<=size;++i)
-		{
-			printf("v: %d | waga: %llu | reszta: %u\n",tab[i].wsk-w,tab[i].min,tab[i].r);
-		}
-		putchar('\n');
-	}
-	
-	//	v2:
-	
-	size_t rebuild_up(size_t n)					//Ta funkcja nie jest generyczna!!!
-	{
-		size_t i=n;
-		T tmp=tab[n];
-		while((i>>1) && tmp<tab[i>>1])
-		{
-			tab[i]=tab[i>>1];
+			tab[i]=tmp;
 			tab[i].wsk->i[tab[i].r]=i;
 			//printf("Kopiec: %u zastępuje %u\n",i>>1,i);
-			i>>=1;
+			return i;
 		}
-		tab[i]=tmp;
-		tab[i].wsk->i[tab[i].r]=i;
-		//printf("Kopiec: %u zastępuje %u\n",i>>1,i);
-		return i;
-	}
-	
-	T& min()
-	{
-		return tab[1];
-	}
-	
-	T extract_min()
-	{
-		T tmp=tab[1];
-		tab[1]=tab[size];
-		tab[1].wsk->i[tab[1].r]=1;
-		tab[size].wsk->i[tab[size].r]=size;
-		--size;
-		rebuild_tree();
-		return tmp;
-	}
-	
-	size_t insert(T tmp)
-	{
-		tab[++size]=tmp;
-		return rebuild_up(size);
-	}
+		
+		T& min()
+		{
+			return tab[1];
+		}
+		
+		T extract_min()
+		{
+			T tmp=tab[1];
+			tab[1]=tab[size];
+			tab[1].wsk->i[tab[1].r]=1;
+			//tab[size].wsk->i[tab[size].r]=size;
+			--size;
+			rebuild_tree();
+			return tmp;
+		}
+		
+		size_t insert(T tmp)
+		{
+			tab[++size]=tmp;
+			tab[size].wsk->i[tab[size].r]=size;
+			return rebuild_up(size);
+		}
 };
 
 struct edge
@@ -260,7 +261,7 @@ int main()
 			}
 			
 			//printf("Dijkstra v: %u | d: %llu | r: %llu\n",wsk-node,m,m%k);
-				
+			
 			wsk->heap[rr]=false;
 			//bool push=false;
 			for(vector<edge>::iterator i=wsk->edges.begin(),e=wsk->edges.end();i!=e;++i)
@@ -272,18 +273,18 @@ int main()
 					//printf("Poprawka v: %u | d: %llu ",i->d,node[i->d].k[r]);
 					if(node[i->d].heap[r])
 					{
-						//printf("modyfikacja %u\n",node[i->d].i[r]);
+					//	printf("modyfikacja %u w kopcu %u\n",node[i->d].i[r],node[i->d].i[r]);
 						kopiec.tab[node[i->d].i[r]].min=m+i->w;
 						kopiec.rebuild_up(node[i->d].i[r]);
 					}
 					else
 					{
-						//printf("wrzut\n");
+					//	printf("wrzut\n");
 						node[i->d].heap[r]=true;
 						kopiec.insert(label(m+i->w,&node[i->d],r));
 					}
-				//	kopiec.dump_tab(node);
-				//	printf("Poprawka v: %u | d: %llu\n",kopiec.tab[node[i->d].i[r]].wsk-node,kopiec.tab[node[i->d].i[r]].min);
+					//	kopiec.dump_tab(node);
+					//	printf("Poprawka v: %u | d: %llu\n",kopiec.tab[node[i->d].i[r]].wsk-node,kopiec.tab[node[i->d].i[r]].min);
 				}
 			}
 		}
@@ -296,12 +297,12 @@ int main()
 			for(int j=0;j<k;++j)
 			{
 				if(node[i].k[j]!=inf)
-					printf("\t%llu",node[i].k[j]);
+				printf("\t%llu",node[i].k[j]);
 				else
 					printf("\tinf");
-			}
-			putchar('\n');
-		}*/
+	}
+	putchar('\n');
+	}*/
 		
 		scanf("%u",&q);
 		while(q--)
