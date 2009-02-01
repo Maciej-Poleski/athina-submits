@@ -1,7 +1,7 @@
 #include <cstdio>
 #include <stdint.h>
 #include <vector>
-#include <stack>
+//#include <stack>
 using namespace std;
 
 struct edge
@@ -41,15 +41,17 @@ void dfs(uint32_t n=1)
 
 void dfs2(uint32_t n=0)
 {
-	for(vector<edge>::iterator i=graf[n].begin(),e=graf[n].end();i!=e;++i)
+	vector<edge>::iterator i,e;
+	while(1)
 	{
-		if(!(*(i->v)))
-		{
-			*(i->v)=true;
-			stos.push_back(i->d);
-			dfs2(i->d);
+		for(i=graf[n].begin(),e=graf[n].end();i!=e && *(i->v);++i);
+		
+		if(i==e)
 			break;
-		}
+	
+		*(i->v)=true;
+		stos.push_back(i->d);
+		n=i->d;
 	}
 }
 
