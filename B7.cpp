@@ -14,7 +14,7 @@ struct edge
 
 vector<edge>		*graf;
 bool				*leak;
-stack<uint32_t>		stos;
+vector<uint32_t>	stos;
 bool				*v;
 bool				*v2;
 uint32_t			n;
@@ -46,7 +46,7 @@ void dfs2(uint32_t n=0)
 		if(!(*(i->v)))
 		{
 			*(i->v)=true;
-			stos.push(i->d);
+			stos.push_back(i->d);
 			dfs2(i->d);
 			break;
 		}
@@ -86,7 +86,7 @@ int main()
 		delete [] v;
 		
 		//printf("%u\n",suma);
-		stos.push(0);
+		stos.push_back(0);
 		
 		if(suma==0)
 		{
@@ -94,18 +94,17 @@ int main()
 			delete [] v2;
 			delete [] graf;
 			printf("1\n%u",t+1);
-			t=stos.top();
+			t=stos.back();
 			while(stos.size()!=1)
 			{
-				printf(" %u",stos.top());
-				stos.pop();
+				printf(" %u",stos.back());
+				stos.pop_back();
 			}
-			stos.pop();
+			stos.pop_back();
 			printf(" %u\n",t);
 		}
 		else
 		{
-			stack<uint32_t>	stos2;
 			printf("%u\n",suma>>1);
 			dfs2();
 			delete [] v2;
@@ -113,24 +112,19 @@ int main()
 				delete i->v;
 			delete [] graf;
 			
-			while(stos.size()!=1)
+			uint32_t i=1;
+			
+			while(i<stos.size())
 			{
-				stos.pop();
-				while(stos.top()!=0 || t==0)
-				{
-					stos2.push(stos.top());
-					stos.pop();
-				}
-				printf("%u",stos2.size());
-				while(!stos2.empty())
-				{
-					printf(" %u",stos2.top());
-					stos2.pop();
-				}
+				uint32_t j=i;
+				for(;stos[j]!=0;++j);
+				printf("%u",j-i);
+				for(;i<j;++i)
+					printf(" %u",stos[i]);
 				putchar('\n');
-				--t;
+				++i;
 			}
-			stos.pop();
+			stos.clear();
 		}
 		
 		/*for(vector<edge>::iterator i=graf[0].begin(),e=graf[0].end();i!=e;++i)
