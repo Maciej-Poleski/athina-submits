@@ -1,150 +1,154 @@
 #include <cstdio>
-#include <stdint.h>
 #include <vector>
-//#include <stack>
+#include <stdint.h>
+
 using namespace std;
 
 struct edge
 {
 	uint32_t	d;
-	bool		*v;
+	uint32_t	v;
 	
-	edge(uint32_t dd,bool *vv) : d(dd),v(vv) {}
+	edge(uint32_t dd,uint32_t vv) : d(dd),v(vv) {}
 };
 
-vector<edge>		*graf;
-bool				*leak;
-vector<uint32_t>	stos;
-bool				*v;
-bool				*v2;
-uint32_t			n;
-uint32_t			suma=0;
+bool			*v2;
+vector<edge>	*graf;
+uint32_t		*wynik;
+uint32_t		suma;
+uint32_t		n;
+uint32_t		m;
 
-void dfs(uint32_t n=1)
+void buduj()
 {
-	if(!v[n])
+	for(uint32_t i=1;i<=n;++i)
 	{
-		v[n]=true;
-		if((graf[n].size())&1)
+		if(graf[i].size()&1)
 		{
+			graf[0].push_back(edge(i,m+suma));
+			graf[i].push_back(edge(0,m+suma));
 			++suma;
-			leak=new bool(false);
-			graf[0].push_back(edge(n,leak));
-			graf[n].push_back(edge(0,leak));
-		}
-		for(vector<edge>::iterator i=graf[n].begin(),e=graf[n].end();i!=e;++i)
-		{
-			dfs(i->d);
 		}
 	}
 }
 
-void dfs2(uint32_t n=0)
+void iteruj()
 {
-	vector<edge>::iterator i,e;
-	while(1)
+	wynik=new uint32_t[m+2];
+	uint32_t				*w=wynik+1;
+	uint32_t				n=0;
+	vector<edge>::iterator	i,e;
+	while(true)
 	{
-		for(i=graf[n].begin(),e=graf[n].end();i!=e && *(i->v);++i);
-		
-		if(i==e)
-			break;
+		for(i=graf[n].begin(),e=graf[n].end();i!=e && v2[i->v];++i);
 	
-		*(i->v)=true;
-		stos.push_back(i->d);
+		if(i==e)
+		{
+			/*printf("%u",w-wynik);
+			for(uint32_t *wsk=wynik+1;wsk<w;++wsk)
+				printf(" %u",*wsk);
+			putchar('\n');
+			w=wynik;
+			puts("KONIEC");*/
+			break;
+		}
+		if(i->d==0)
+		{
+			printf("%u",w-wynik-1);
+			for(uint32_t *wsk=wynik+1;wsk<w;++wsk)
+				printf(" %u",*wsk);
+			putchar('\n');
+			w=wynik;
+		}
+	
+		*(w++)=i->d;
+		v2[i->v]=true;
 		n=i->d;
 	}
+	delete [] wynik;
+}
+
+void onlyOneEuler()
+{
+	wynik=new uint32_t[m+1];
+	uint32_t				*w=wynik;
+	uint32_t				n=1;
+	vector<edge>::iterator	i,e;
+	while(true)
+	{
+		for(i=graf[n].begin(),e=graf[n].end();i!=e && v2[i->v];++i);
+	
+		if(i==e)
+		{
+			printf("%u",w-wynik);
+			for(uint32_t *wsk=wynik;wsk<w;++wsk)
+				printf(" %u",*wsk);
+			printf(" %u",*wynik);
+			putchar('\n');
+			w=wynik;
+			break;
+		}
+		/*if(i->d==0)
+		{
+			printf("%u",w-wynik-1);
+			for(uint32_t *wsk=wynik+1;wsk<w;++wsk)
+				printf(" %u",*wsk);
+			putchar('\n');
+			w=wynik;
+		}*/
+	
+		*(w++)=n;
+		v2[i->v]=true;
+		n=i->d;
+	}
+	delete [] wynik;
 }
 
 int main()
 {
 	uint32_t	z;
+	uint32_t	a;
+	uint32_t	b;
 	scanf("%u",&z);
 	while(z--)
 	{
-		uint32_t	m;
-		uint32_t	t;
-		uint32_t	x;
-		uint32_t	y;
-		
 		scanf("%u%u",&n,&m);
 		
 		graf=new vector<edge>[n+1];
-		v=new bool[n+1];
-		v2=new bool[m+1];
 		
-		for(bool *i=v,*e=v+n+1;i!=e;++i)
-			*i=false;
-		t=m;
-		while(m)
+		for(uint32_t i=0;i<m;++i)
 		{
-			scanf("%u%u",&x,&y);
-			graf[x].push_back(edge(y,v2+m));
-			graf[y].push_back(edge(x,v2+m));
-			v2[m]=false;
-			--m;
+			scanf("%u%u",&a,&b);
+			graf[a].push_back(edge(b,i));
+			graf[b].push_back(edge(a,i));
 		}
 		
-		dfs();
-		delete [] v;
+		buduj();
 		
-		//printf("%u\n",suma);
-		stos.push_back(0);
+		v2=new bool[m+suma];
 		
-		if(suma==0)
+		for(bool *i=v2,*e=i+m+suma;i!=e;++i)
+			*i=false;
+		
+		if(suma!=0)
 		{
-			dfs2(1);
-			delete [] v2;
-			delete [] graf;
-			printf("1\n%u",t+1);
-			t=stos.back();
-			while(stos.size()!=1)
-			{
-				printf(" %u",stos.back());
-				stos.pop_back();
-			}
-			stos.pop_back();
-			printf(" %u\n",t);
+			printf("%u\n",suma>>1);
+			iteruj();
 		}
 		else
 		{
-			printf("%u\n",suma>>1);
-			dfs2();
-			delete [] v2;
-			for(vector<edge>::iterator i=graf[0].begin(),e=graf[0].end();i!=e;++i)
-				delete i->v;
-			delete [] graf;
-			
-			uint32_t i=1;
-			
-			while(i<stos.size())
-			{
-				uint32_t j=i;
-				for(;stos[j]!=0;++j);
-				printf("%u",j-i);
-				for(;i<j;++i)
-					printf(" %u",stos[i]);
-				putchar('\n');
-				++i;
-			}
-			stos.clear();
+			printf("1\n");
+			onlyOneEuler();
 		}
+			
+		delete [] graf;
+		delete [] v2;
 		
-		/*for(vector<edge>::iterator i=graf[0].begin(),e=graf[0].end();i!=e;++i)
+		/*printf("%u\n",suma);
+		for(vector<edge>::iterator i=graf[0].begin(),e=graf[0].end();i!=e;++i)
 			printf("%u ",i->d);
-		putchar('\n');
-		
-		while(!stos.empty())
-		{
-			printf("%u ",stos.top());
-			stos.pop();
-		}
 		putchar('\n');*/
 		
-		//for(vector<edge>::iterator i=graf[0].begin(),e=graf[0].end();i!=e;++i)
-		//	delete i->v;
-		
-		//for(vector<edge> *i=graf,*e=graf+n+1;i!=e;++i)
-			//i->clear();
 		
 		suma=0;
 	}
