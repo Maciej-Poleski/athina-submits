@@ -4,13 +4,13 @@
 
 using namespace std;
 
-uint32_t	D[200][200];
+int32_t		D[200][200];
 string		*N;
 char		temp[11];
 char		temp2[11];
 uint32_t	n;
 
-const uint32_t inf=0xffffffff-1000002;
+const int32_t inf=100000005;
 
 int main()
 {
@@ -50,7 +50,8 @@ int main()
 		while(m--)
 		{
 			scanf("%s %s",temp,temp2);
-			scanf("%u\n",&D[M[temp]][M[temp2]]);
+			//printf("_%s_%s_\n",temp,temp2);
+			scanf("%d\n",&D[M[temp]][M[temp2]]);
 			D[M[temp2]][M[temp]]=D[M[temp]][M[temp2]];
 		}
 		
@@ -83,7 +84,7 @@ int main()
 		{
 			printf("%12s",N[i].c_str());
 			for(uint32_t j=0;j<n;++j)
-				printf("%12u",D[i][j]);
+				printf("%12d",D[i][j]);
 			putchar('\n');
 		}
 		
