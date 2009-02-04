@@ -38,7 +38,7 @@ int main()
 			for(uint32_t j=0;j<n;++j)
 				for(uint32_t k=0;k<n;++k)
 					if(P[j][k]==false && P[j][i]==true && P[i][k]==true)
-						P[i][k]=true;
+						P[j][k]=true;
 						
 		/*for(uint32_t i=0;i<n;++i)
 		{
@@ -65,7 +65,7 @@ int main()
 			for(uint32_t j=0;j<n;++j)
 				for(uint32_t k=0;k<n;++k)
 					if(i!=j && j!=k && i!=k && P[i][j] && !P[i][k] && !P[k][j])
-						if(W[i][k]!=W[i][i])
+						if(W[i][k]!=W[i][j])
 							N=true;
 		
 		if(N)
