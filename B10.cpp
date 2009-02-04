@@ -65,7 +65,7 @@ int main()
 			for(uint32_t j=0;j<n;++j)
 				for(uint32_t k=0;k<n;++k)
 					if(i!=j && j!=k && i!=k && P[i][j] && !P[i][k] && !P[k][j])
-						if(W[i][k]!=W[i][j])
+						if(W[i][k]!=W[j][k])
 							N=true;
 		
 		if(N)
