@@ -129,25 +129,26 @@ int main()
 			uint32_t	V=tree[1];
 			tree[V+treeS]=n;
 			{
+			//	printf("Usuni�to %u %u %u\n",V,treeS,V+treeS);
 				uint32_t	nn=(V+treeS)>>1;
 				uint32_t	tt;
 				while(nn)
 				{
 					//printf("  Odbudowa B dla %u\n",nn);
-					tt=(mat[tree[nn<<1]]<=mat[tree[(nn<<1)+1]]?nn<<1:(nn<<1)+1);
+					tt=(mat[tree[nn<<1]]<mat[tree[(nn<<1)+1]]?(nn<<1):(nn<<1)+1);
 					//puts("B");
 					//print_t();
 					if(tree[nn]==tree[tt])
 					{
-						//puts("C");
+					//	puts("C");
 						break;
 					}
 					else
 					{
-						//puts("D");
+					//	puts("D");
 						tree[nn]=tree[tt];
 					}
-					//puts("E");
+				//	puts("E");
 					
 					nn>>=1;
 				}
@@ -177,10 +178,10 @@ int main()
 					while(n)
 					{
 						//printf("  Odbudowa dla %u\n",n);
-						t=(mat[tree[n<<1]]<=mat[tree[(n<<1)+1]]?tree[n<<1]:tree[(n<<1)+1]);
-						if(tree[n]==t)
-							break;
-						else
+						t=(mat[tree[n<<1]]<mat[tree[(n<<1)+1]]?tree[n<<1]:tree[(n<<1)+1]);
+						//if(tree[n]==t)
+							//break;
+						//else
 							tree[n]=t;
 						
 						n>>=1;
