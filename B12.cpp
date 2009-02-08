@@ -135,7 +135,7 @@ int main()
 				while(nn)
 				{
 					//printf("  Odbudowa B dla %u\n",nn);
-					tt=(mat[tree[nn<<1]]<mat[tree[(nn<<1)+1]]?(nn<<1):(nn<<1)+1);
+					tt=(mat[tree[nn<<1]]<=mat[tree[(nn<<1)+1]]?(nn<<1):(nn<<1)+1);
 					//puts("B");
 					//print_t();
 					//if(tree[nn]==tree[tt])
@@ -178,7 +178,7 @@ int main()
 					while(n)
 					{
 						//printf("  Odbudowa dla %u\n",n);
-						t=(mat[tree[n<<1]]<mat[tree[(n<<1)+1]]?tree[n<<1]:tree[(n<<1)+1]);
+						t=(mat[tree[n<<1]]<=mat[tree[(n<<1)+1]]?tree[n<<1]:tree[(n<<1)+1]);
 						//if(tree[n]==t)
 							//break;
 						//else
