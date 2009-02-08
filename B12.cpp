@@ -124,7 +124,7 @@ int main()
 			
 		//print_t();
 		
-		for(uint32_t i=0;i<n;++i)
+		for(uint32_t i=1;i<n;++i)
 		{
 			uint32_t	V=tree[1];
 			tree[V+treeS]=n;
@@ -136,7 +136,7 @@ int main()
 					//printf("  Odbudowa B dla %u\n",nn);
 					tt=(mat[tree[nn<<1]]<=mat[tree[(nn<<1)+1]]?nn<<1:(nn<<1)+1);
 					//puts("B");
-				//	print_t();
+					//print_t();
 					if(tree[nn]==tree[tt])
 					{
 						//puts("C");
@@ -153,7 +153,7 @@ int main()
 				}
 				//puts("X");
 			}
-		//	print_t();
+			//print_t();
 			//fflush(stdout);
 			for(vector<edge>::iterator i=graf[V+1].begin(),e=graf[V+1].end();i!=e;++i)
 			{
@@ -165,11 +165,11 @@ int main()
 				}
 				else
 				{
-				//	printf(" B %d | ",(i->t-((mat[V]+i->t-i->a)%i->t)+i->w));
+					//printf(" B %d | ",(i->t-((mat[V]+i->t-i->a)%i->t)+i->w));
 					mat[i->d-1]=(mat[i->d-1]<mat[V]+(i->t-((mat[V]+i->t-i->a)%i->t)+i->w)?mat[i->d-1]:mat[V]+(i->t-((mat[V]+i->t-i->a)%i->t)+i->w));
 				}
-			//	printf("%d\n",mat[i->d-1]);
-			//	printf("W %u dla V=%u w=%u\n",V+1,i->d,mat[i->d-1]);
+				//printf("%d\n",mat[i->d-1]);
+				//printf("W %u dla V=%u w=%u\n",V+1,i->d,mat[i->d-1]);
 				{
 					//printf("%u %u %u\n",i->d,treeS,i->d+treeS-1);
 					uint32_t	n=((i->d+treeS-1)>>1);
@@ -177,7 +177,7 @@ int main()
 					while(n)
 					{
 						//printf("  Odbudowa dla %u\n",n);
-						t=(mat[tree[n<<1]]<mat[tree[(n<<1)+1]]?tree[n<<1]:tree[(n<<1)+1]);
+						t=(mat[tree[n<<1]]<=mat[tree[(n<<1)+1]]?tree[n<<1]:tree[(n<<1)+1]);
 						if(tree[n]==t)
 							break;
 						else
@@ -194,10 +194,10 @@ int main()
 			printf("%d ",mat[i]);
 		putchar('\n');*/
 		
-		if(mat[n-1]==inf)
+		if(tree[1]==n)
 			puts("NIE");
 		else
-			printf("%d\n",mat[n-1]);
+			printf("%d\n",mat[tree[1]]);
 		
 		delete [] graf;
 		delete [] ++tree;
