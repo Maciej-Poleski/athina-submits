@@ -138,16 +138,16 @@ int main()
 					tt=(mat[tree[nn<<1]]<mat[tree[(nn<<1)+1]]?(nn<<1):(nn<<1)+1);
 					//puts("B");
 					//print_t();
-					if(tree[nn]==tree[tt])
-					{
+					//if(tree[nn]==tree[tt])
+					//{
 					//	puts("C");
-						break;
-					}
-					else
-					{
+						//break;
+					//}
+					//else
+					//{
 					//	puts("D");
 						tree[nn]=tree[tt];
-					}
+					//}
 				//	puts("E");
 					
 					nn>>=1;
