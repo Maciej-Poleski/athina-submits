@@ -139,8 +139,8 @@ int main()
 		for(uint32_t i=1;i<n;++i)
 		{
 			uint32_t	V=tree[1];
-            if(V==n)
-                break;
+            //if(V==n)
+              //  break;
 			tree[V+treeS]=n;
 			
 			rebuild((V+treeS)>>1);
