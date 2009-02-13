@@ -70,6 +70,18 @@ void print_t()
         printf("</table>");
 }
 
+void rebuild(uint32_t n)
+{
+    uint32_t    t;
+    while(n)
+    {
+        t=(mat[tree[n<<1]]<mat[tree[(n<<1)+1]]?(n<<1):((n<<1)+1));
+        
+        tree[n]=tree[t];
+        
+        n>>=1;
+    }
+}
 
 int main()
 {
@@ -127,33 +139,12 @@ int main()
 		for(uint32_t i=1;i<n;++i)
 		{
 			uint32_t	V=tree[1];
+            if(V==n)
+                break;
 			tree[V+treeS]=n;
-			{
-			//	printf("Usuni�to %u %u %u\n",V,treeS,V+treeS);
-				uint32_t	nn=(V+treeS)>>1;
-				uint32_t	tt;
-				while(nn)
-				{
-					//printf("  Odbudowa B dla %u\n",nn);
-					tt=(mat[tree[nn<<1]]<=mat[tree[(nn<<1)+1]]?(nn<<1):(nn<<1)+1);
-					//puts("B");
-					//print_t();
-					//if(tree[nn]==tree[tt])
-					//{
-					//	puts("C");
-						//break;
-					//}
-					//else
-					//{
-					//	puts("D");
-						tree[nn]=tree[tt];
-					//}
-				//	puts("E");
-					
-					nn>>=1;
-				}
-				//puts("X");
-			}
+			
+			rebuild((V+treeS)>>1);
+			
 			//print_t();
 			//fflush(stdout);
 			for(vector<edge>::iterator i=graf[V+1].begin(),e=graf[V+1].end();i!=e;++i)
@@ -171,22 +162,9 @@ int main()
 				}
 				//printf("%d\n",mat[i->d-1]);
 				//printf("W %u dla V=%u w=%u\n",V+1,i->d,mat[i->d-1]);
-				{
-					//printf("%u %u %u\n",i->d,treeS,i->d+treeS-1);
-					uint32_t	n=((i->d+treeS-1)>>1);
-					uint32_t	t;
-					while(n)
-					{
-						//printf("  Odbudowa dla %u\n",n);
-						t=(mat[tree[n<<1]]<=mat[tree[(n<<1)+1]]?tree[n<<1]:tree[(n<<1)+1]);
-						//if(tree[n]==t)
-							//break;
-						//else
-							tree[n]=t;
-						
-						n>>=1;
-					}
-				}
+				
+				rebuild((treeS+i->d-1)>>1);
+				
 				//print_t();
 			}
 		}
