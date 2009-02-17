@@ -1,109 +1,190 @@
 #include <cstdio>
-#include <utility>
-#include <queue>
 #include <vector>
-#define MP(x,y) make_pair((x),(y))
+#include <stdint.h>
 
 using namespace std;
-using namespace rel_ops;
 
-typedef pair<int,int> PII;
+inline unsigned int mpow2(unsigned int n)
+{
+	unsigned int wynik=1;
+	while(wynik<n)
+		wynik<<=1;
+	return wynik;
+}
 
-const int   inf=1050000000;
+const int	inf=2000000000;
 
 struct edge
 {
-    int     D;
-    int     w;
-    int     T;
-    int     a;
-    int     l;
-    
-    edge(int DD,int ww,int TT,int aa,int ll) : D(DD),w(ww),T(TT),a(aa),l(ll) {}
+	uint32_t	d;
+	int			w;
+	int			t;
+	int			a;
+	int			l;
+	
+	edge(uint32_t dd,int ww,int tt,int aa,int ll) : d(dd),w(ww),t(tt),a(aa),l(ll) {}
 };
 
-struct vertex
+/*struct vertex
 {
-    int             r;
-    vector<edge>    L;
+	uint32_t	i;
+	int			t;
+	
+	vertex() : t(inf) {}
+	
+	bool operator<(const vertex &o) const
+	{
+		return t<o.t;
+	}
+};*/
 
-    vertex() : r(inf) {}
-};
+vector<edge>	*graf;
+uint32_t		n;
+uint32_t		m;
 
-vertex  *graf;
-int		n;
-int		m;
+namespace PQ
+{
+	int			*mat;
+	uint32_t	*tree;
+	uint32_t	treeS;
+	
+}
+
+using namespace PQ;
+
+void print_t()
+{
+        printf("<table border=2 cellspacing=0 width=100%>\n<tr>\n");
+        for(size_t i=1;i<treeS*2;++i)
+        {
+                size_t cols=(i==mpow2(i)?treeS*2/i:treeS*2/(mpow2(i)/2));
+                printf("<td colspan=%u>\n",cols);
+
+                printf("<center>%d<br />%d<br />%u</center>\n",tree[i],mat[tree[i]],i);
+
+                printf("</td>\n");
+
+                if(i==mpow2(i)-1 || i==1)
+                        printf("</tr>\n<tr>\n");
+        }
+        printf("</table>");
+}
+
+void rebuild(uint32_t n)
+{
+    uint32_t    t;
+    while(n)
+    {
+        t=(mat[tree[n<<1]]<mat[tree[(n<<1)+1]]?(n<<1):((n<<1)+1));
+        
+        tree[n]=tree[t];
+        
+        n>>=1;
+    }
+}
 
 int main()
 {
-	int		z;
-    int     S,D,w,T,a,l;
-	scanf("%d",&z);
+	uint32_t	z;
+	scanf("%u",&z);
 	while(z--)
 	{
-        scanf("%d%d",&n,&m);
-        graf=new vertex[n+1];
-
-        for(int i=0;i<m;++i)
-        {
-            scanf("%d%d%d%d%d%d",&S,&D,&w,&T,&a,&l);
-            graf[S].L.push_back(edge(D,w,T,a,l));
-        }
-
-        priority_queue<PII> kolejka;        // Kolejka wierzchołków
-
-        graf[1].r=0;
-        kolejka.push(MP(0,1));
-
-        while(!kolejka.empty())
-        {
-            PII top=kolejka.top();
-            int &n=top.second;
-            int &r=top.first;
-            kolejka.pop();
-
-            if(graf[n].r!=r)                // Informacja w kopcu jest nieauktualna
-                continue;
-//          if(r==inf)                      // Najbliższy wierzchołek jest nieskończenie daleko - relaksacja jest niemożliwa
-//              throw 2;                    // Nigdy nie powinno się wydarzyć
-
-            for(vector<edge>::iterator i=graf[n].L.begin(),e=graf[n].L.end();i!=e;++i)
-            {
-                int x;
-                
-                if(i->T==0 || ((x=((r+i->T-i->a)%i->T))<i->l /*&& r>=i->a*/))
-                {
-                    if(graf[i->D].r>r+i->w)
-                    {
-                        graf[i->D].r=r+i->w;
-                        kolejka.push(MP(graf[i->D].r,i->D));
-                    }
-                }
-                /*else if(r<i->a)
-                {
-                    if(graf[i->D].r>i->a)
-                    {
-                        graf[i->D].r=i->a;
-                        kolejka.push(MP(i->a,i->D));
-                    }
-                }*/
-                else
-                {
-                    if(graf[i->D].r>r+i->w+i->T-x)
-                    {
-                        graf[i->D].r=r+i->w+i->T-x;
-                        kolejka.push(MP(graf[i->D].r,i->D));
-                    }
-                }
-            }
-        }
-
-        if(graf[n].r==inf)
-            puts("NIE");
-        else
-            printf("%d\n",graf[n].r);
-
-        delete [] graf;
-    }
+		uint32_t	u;
+		uint32_t	v;
+		int			w;
+		int			t;
+		int			a;
+		int			l;
+		
+		scanf("%u%u",&n,&m);
+		
+		graf=new vector<edge>[n+1];
+		
+		for(uint32_t i=1;i<=m;++i)
+		{
+			scanf("%u%u%d%d%d%d",&u,&v,&w,&t,&a,&l);
+			graf[u].push_back(edge(v,w,t,a,l));
+		}
+		
+		PQ::mat=new int[n+1];
+		
+		for(uint32_t i=1;i<=n;++i)
+			mat[i]=inf;
+		
+		PQ::tree=new uint32_t[(PQ::treeS=mpow2(n+1))*2-1];
+		--PQ::tree;
+		
+		//for(uint32_t i=1;i<PQ::treeS*2;++i)
+		//	printf("%u ",PQ::tree[i]);
+		//putchar('\n');
+		
+		for(uint32_t i=1;i<PQ::treeS*2;++i)
+			PQ::tree[i]=n;
+		
+		for(uint32_t i=PQ::treeS,e=i+n;i<e;++i)
+			PQ::tree[i]=i-PQ::treeS;
+		for(uint32_t i=PQ::treeS+n,e=PQ::treeS*2;i<e;++i)
+			PQ::tree[i]=n;
+		
+		mat[tree[treeS]]=0;
+		
+		for(uint32_t i=treeS>>1;i>0;--i)
+		{
+			//printf("%u %u\n",tree[i<<1],tree[(i<<1)+1]);
+			tree[i]=(mat[tree[i<<1]]<mat[tree[(i<<1)+1]]?tree[i<<1]:tree[(i<<1)+1]);
+		}
+			
+		//print_t();
+		
+		for(uint32_t i=1;i<n;++i)
+		{
+			uint32_t	V=tree[1];
+            if(V==n)
+                break;
+			tree[V+treeS]=n;
+			
+			rebuild((V+treeS)>>1);
+			
+			//print_t();
+			//fflush(stdout);
+			for(vector<edge>::iterator i=graf[V+1].begin(),e=graf[V+1].end();i!=e;++i)
+			{
+				//printf("relax z %d waga %d",V+1,mat[V]);
+				if(i->t==0 || (( (mat[V]+i->t-i->a)%i->t<i->l)) && mat[V]>=i->a)
+				{
+					//printf(" A ");
+					mat[i->d-1]=(mat[i->d-1]<mat[V]+i->w?mat[i->d-1]:mat[V]+i->w);
+				}
+				else if(mat[V]<i->a)
+				{
+					mat[i->d-1]=(mat[i->d-1]<i->a?mat[i->d-1]:i->a);
+				}
+				else
+				{
+					//printf(" B %d | ",(i->t-((mat[V]+i->t-i->a)%i->t)+i->w));
+					mat[i->d-1]=(mat[i->d-1]<mat[V]+(i->t-((mat[V]+i->t-i->a)%i->t)+i->w)?mat[i->d-1]:mat[V]+(i->t-((mat[V]+i->t-i->a)%i->t)+i->w));
+				}
+				//printf("%d\n",mat[i->d-1]);
+				//printf("W %u dla V=%u w=%u\n",V+1,i->d,mat[i->d-1]);
+				
+				rebuild((treeS+i->d-1)>>1);
+				
+				//print_t();
+			}
+		}
+		
+		/*for(uint32_t i=0;i<=n;++i)
+			printf("%d ",mat[i]);
+		putchar('\n');*/
+		
+		if(tree[1]==n)
+			puts("NIE");
+		else
+			printf("%d\n",mat[tree[1]]);
+		
+		delete [] graf;
+		delete [] ++tree;
+		delete [] mat;
+	}
 	return 0;
 }
