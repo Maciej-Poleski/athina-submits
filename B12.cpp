@@ -71,7 +71,7 @@ int main()
             {
                 int x;
                 
-                if(i->T==0 || ((x=((r+i->T-i->a)%i->T))<i->l && r>=i->a))
+                if(i->T==0 || ((x=((r+i->T-i->a)%i->T))<i->l /*&& r>=i->a*/))
                 {
                     if(graf[i->D].r>r+i->w)
                     {
@@ -79,14 +79,14 @@ int main()
                         kolejka.push(MP(graf[i->D].r,i->D));
                     }
                 }
-                else if(r<i->a)
+                /*else if(r<i->a)
                 {
                     if(graf[i->D].r>i->a)
                     {
                         graf[i->D].r=i->a;
                         kolejka.push(MP(i->a,i->D));
                     }
-                }
+                }*/
                 else
                 {
                     if(graf[i->D].r>r+i->w+i->T-x)
