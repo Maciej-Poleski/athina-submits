@@ -1,22 +1,17 @@
 #include <cstdio>
-#include <utility>
-#include <queue>
 #include <vector>
-#define MP(x,y) make_pair((x),(y))
 
 using namespace std;
 
-typedef pair<int,int> PII;
-
-struct PQ : public priority_queue<PII>
-{
-    PQ()
-    {
-        c.reserve(110000);
-    }
-};
-
 const int   inf=1050000000;
+
+inline int mpow2(int x)
+{
+    int wynik=1;
+    while(wynik<x)
+        wynik*=2;
+    return wynik;
+}
 
 struct edge
 {
@@ -31,15 +26,26 @@ struct edge
 
 struct vertex
 {
-    int             r;
     vector<edge>    L;
-
-    vertex() : r(inf) {}
 };
 
 vertex  *graf;
+int     *drzewo;
+int     size;
+int     *wagi;
 int		n;
 int		m;
+
+void rebuild(int x)
+{
+    x=(x+size-1)/2;
+    while(x)
+    {
+        drzewo[x]=(wagi[drzewo[x<<1]]<wagi[drzewo[(x<<1)+1]]?drzewo[x<<1]:drzewo[(x<<1)+1]);
+        //printf("Zaaktualizowano: %d=%d\n",drzewo[x],wagi[drzewo[x]]);
+        x/=2;
+    }
+}
 
 int main()
 {
@@ -57,33 +63,56 @@ int main()
             graf[S].L.push_back(edge(D,w,T,a,l));
         }
 
-        PQ      kolejka;        // Kolejka wierzchołków
+        wagi=new int[n+1];
+        drzewo=new int[(size=mpow2(n))*2];
 
-        graf[1].r=0;
-        kolejka.push(MP(0,1));
+        for(int i=0;i<=n;++i)
+            wagi[i]=inf;
 
-        while(!kolejka.empty())
+        for(int i=1;i<size;++i)
+            drzewo[i]=0;
+
+        for(int i=0;i<n;++i)
+            drzewo[i+size]=i+1;
+
+        for(int i=n;i<size;++i)
+            drzewo[i+size]=0;
+
+        wagi[1]=0;
+        
+        //for(int i=size-1;i>0;--i)
+            rebuild(1);
+        
+        while(wagi[drzewo[1]]!=inf)
         {
-            PII top=kolejka.top();
-            int &n=top.second;
-            int &r=top.first;
-            kolejka.pop();
+            int v=drzewo[1];
+            int r=wagi[v];
 
-            if(graf[n].r!=r)                // Informacja w kopcu jest nieauktualna
-                continue;
+            drzewo[v+size-1]=0;
+            rebuild(v);
+
+            /*printf("   ");
+            for(int i=1;i<size*2;++i)
+                printf("%d ",drzewo[i]);
+            putchar('\n');*/
+
 //          if(r==inf)                      // Najbliższy wierzchołek jest nieskończenie daleko - relaksacja jest niemożliwa
 //              throw 2;                    // Nigdy nie powinno się wydarzyć
 
-            for(vector<edge>::iterator i=graf[n].L.begin(),e=graf[n].L.end();i!=e;++i)
+            for(vector<edge>::iterator i=graf[v].L.begin(),e=graf[v].L.end();i!=e;++i)
             {
                 int x;
                 
                 if(i->T==0 || ((x=((r+i->T-i->a)%i->T))<i->l /*&& r>=i->a*/))
                 {
-                    if(graf[i->D].r>r+i->w)
+                    if(wagi[i->D]>r+i->w)
                     {
-                        graf[i->D].r=r+i->w;
-                        kolejka.push(MP(graf[i->D].r,i->D));
+                        wagi[i->D]=r+i->w;
+                        rebuild(i->D);
+                        //printf("%d: ",i->D);
+                        //for(int i=1;i<size*2;++i)
+                            //printf("%d ",drzewo[i]);
+                        //putchar('\n');
                     }
                 }
                 /*else if(r<i->a)
@@ -96,20 +125,26 @@ int main()
                 }*/
                 else
                 {
-                    if(graf[i->D].r>r+i->w+i->T-x)
+                    if(wagi[i->D]>r+i->w+i->T-x)
                     {
-                        graf[i->D].r=r+i->w+i->T-x;
-                        kolejka.push(MP(graf[i->D].r,i->D));
+                        wagi[i->D]=r+i->w+i->T-x;
+                        rebuild(i->D);
+                        //printf("2: ");
+                        //for(int i=1;i<size*2;++i)
+                            //printf("%d ",drzewo[i]);
+                        //putchar('\n');
                     }
                 }
             }
         }
-
-        if(graf[n].r==inf)
+        
+        if(wagi[n]==inf)
             puts("NIE");
         else
-            printf("%d\n",graf[n].r);
+            printf("%d\n",wagi[n]);
 
+        delete [] drzewo;
+        delete [] wagi;
         delete [] graf;
     }
 	return 0;
