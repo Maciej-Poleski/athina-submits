@@ -117,9 +117,9 @@ int main()
                 }
                 else if(r<i->a)
                 {
-                    if(wagi[i->D]>i->a)
+                    if(wagi[i->D]>i->a+i->w)
                     {
-                        wagi[i->D]=i->a;
+                        wagi[i->D]=i->a+i->w;
                         rebuild(i->D);
                     }
                 }
