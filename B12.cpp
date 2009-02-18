@@ -12,7 +12,7 @@ struct PQ : public priority_queue<PII>
 {
     PQ()
     {
-        c.reserve(3000000);
+        c.reserve(110000);
     }
 };
 
