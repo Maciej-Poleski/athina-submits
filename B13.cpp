@@ -106,7 +106,11 @@ int main()
             printf(" %d",K[1]=1);
             for(int i=2;i<=n;++i)
             {
-                printf(" %d",K[i]=select(K[queue[i].p],K[queue[low[queue[i].v]].v]));
+                K[queue[i].v]=select(K[queue[i].p],K[queue[low[queue[i].v]].v]);
+            }
+            for(int i=2;i<=n;++i)
+            {
+                printf(" %d",K[i]);
             }
             putchar('\n');
         }
@@ -117,10 +121,14 @@ int main()
 
         //printf("OK: %d, root: %d\n",ok,r);
 
-        //printf("queue: ");
-        //for(int i=1;i<=n;++i)
-        //    printf("(%d %d) ",queue[i].v,queue[i].p);
-        //putchar('\n');
+        /*printf("queue: ");
+        for(int i=1;i<=n;++i)
+            printf("(%d %d) ",queue[i].v,queue[i].p);
+        putchar('\n');
+        printf("low:");
+        for(int i=1;i<=n;++i)
+            printf(" %d",low[i]);
+        putchar('\n');*/
 
         delete [] graf;
         delete [] in;
