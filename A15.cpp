@@ -133,7 +133,7 @@ class list
         void clear()
         {
             while(beg)
-                pop_front();
+                pop_back();
         }
 
         bool empty()
@@ -182,8 +182,10 @@ class list
         {
             #warning To jest prymitywna wersja funkcji splice w związku z brakiem pełnego rozwiązania strażnika (najlepiej na iteratorach).
             en->next=x.beg;
-            x.beg=0;
             en=x.en;
+            x.beg=0;
+            x.en=0;
+            x.M=0;
         }
 
         void erase(iterator position)
@@ -203,6 +205,11 @@ class list
 
         void pop_front()
         {
+            if(beg==0)
+            {
+                en=0;
+                return;
+            }
             if(beg==en)
             {
                 delete beg;
@@ -210,14 +217,20 @@ class list
             }
             else
             {
+                key *old=beg;
                 beg=beg->next;
-                delete beg->prev;
-                beg->prev=0;
+                delete old;
+                //beg->prev=0;
             }
         }
 
         void pop_back()
         {
+            if(en==0)
+            {
+                beg=0;
+                return;
+            }
             if(beg==en)
             {
                 delete en;
@@ -225,9 +238,10 @@ class list
             }
             else
             {
+                key *old=en;
                 en=en->prev;
-                delete en->next;
-                en->next=0;
+                delete old;
+                //en->next=0;
             }
         }
 
