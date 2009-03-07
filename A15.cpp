@@ -185,6 +185,7 @@ class list
         {
             #warning To jest prymitywna wersja funkcji splice w związku z brakiem pełnego rozwiązania strażnika (najlepiej na iteratorach).
             en->next=x.beg;
+            x.beg->prev=en;
             en=x.en;
             x.beg=0;
             x.en=0;
