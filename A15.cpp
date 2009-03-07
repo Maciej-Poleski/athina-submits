@@ -132,7 +132,7 @@ class list
 
         void clear()
         {
-            while(beg)
+            while(!empty())
                 pop_back();
 
             beg=en=0;
@@ -196,11 +196,11 @@ class list
         {
             #warning To jest prymitywna wersja funkcji erase w związku z niepełnym wsparciem dla iteratorów.
             key     *p=position.ptr;
-            if(p!=beg)
+            if(p->prev)
                 p->prev->next=p->next;
             else
                 beg=p->next;
-            if(p!=en)
+            if(p->next)
                 p->next->prev=p->prev;
             else
                 en=p->prev;
@@ -223,7 +223,7 @@ class list
             {
                 key *old=beg;
                 beg=beg->next;
-                if(beg)
+                //if(beg)
                     beg->prev=0;
                 delete old;
             }
@@ -245,7 +245,7 @@ class list
             {
                 key *old=en;
                 en=en->prev;
-                if(en)
+                //if(en)
                     en->next=0;
                 delete old;
             }
@@ -304,7 +304,7 @@ struct hash
             while(i<8 && in[i]!=0)
             {
                 putchar(in[i++]);
-                fflush(stdout);
+                //fflush(stdout);
             }
         }
 };
@@ -458,6 +458,7 @@ int main()
             {
                 i->dump();
             }
+            set.back().dump();
             puts("\\Dump");*/
         }
     }
