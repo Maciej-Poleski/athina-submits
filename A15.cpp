@@ -195,11 +195,11 @@ class list
         {
             #warning To jest prymitywna wersja funkcji erase w związku z niepełnym wsparciem dla iteratorów.
             key     *p=position.ptr;
-            if(p->prev)
+            if(p!=beg)
                 p->prev->next=p->next;
             else
                 beg=p->next;
-            if(p->next)
+            if(p!=en)
                 p->next->prev=p->prev;
             else
                 en=p->prev;
