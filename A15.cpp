@@ -134,6 +134,9 @@ class list
         {
             while(beg)
                 pop_back();
+
+            beg=en=0;
+            M=0;
         }
 
         bool empty()
