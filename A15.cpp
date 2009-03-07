@@ -222,8 +222,9 @@ class list
             {
                 key *old=beg;
                 beg=beg->next;
+                if(beg)
+                    beg->prev=0;
                 delete old;
-                //beg->prev=0;
             }
         }
 
@@ -243,8 +244,9 @@ class list
             {
                 key *old=en;
                 en=en->prev;
+                if(en)
+                    en->next=0;
                 delete old;
-                //en->next=0;
             }
         }
 
