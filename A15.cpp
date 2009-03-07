@@ -138,6 +138,8 @@ int main()
         hash        arg2();
         char        tmp[9];
 
+        set.clear();
+
         for(int i=0;i<n;++i)
         {
             scanf("%s ",in);
