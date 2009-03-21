@@ -76,7 +76,7 @@ inline void inorder(int pr,int po,int l)
             puts("ERROR");
             return;
         }
-        int     x=find(in[POST],po,l-2,in[PRE][pr+1]);
+        int     x=find(in[POST],po,po+l-2,in[PRE][pr+1]);
         //printf("x:%d\n",x);
         inorder(pr+1,po,x-po+1);
         PUT(in[PRE][pr]);
@@ -159,7 +159,7 @@ int main()
                     printf("%d ",*ptr);
                 putchar('\n');
             }
-            if(static_cast<int>(e[0])+static_cast<int>(e[1])+static_cast<int>(e[2])<2)
+            else if(static_cast<int>(e[0])+static_cast<int>(e[1])+static_cast<int>(e[2])<2)
             {
                 if(n==2 && f!=IN && e[(f+1)&1])
                 {
