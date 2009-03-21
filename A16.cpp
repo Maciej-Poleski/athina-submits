@@ -107,12 +107,12 @@ int main()
                 else if(t=='O')
                     f=POST;
                 else
-                    throw 'a';
+                    putchar('a');
             }
             else if(t=='I')
                 f=IN;
             else
-                throw'b';
+                putchar('b');
             
             ign();
 
@@ -134,12 +134,12 @@ int main()
             else if(t=='O')
                 f=POST;
             else
-                throw 1;
+                putchar('1');
         }
         else if(t=='I')
             f=IN;
         else
-            throw 2;
+            putchar('2');
         ign();
                                     /* POCZ�TEK */
         if(n==1)
@@ -187,12 +187,11 @@ int main()
                 }
                 else
                 {
-                    e[IN]=true;
-                    ptr=in[2]=new int[n];
+                    ptr=in[IN]=new int[n];
                     inorder(0,0,n);
                     if(!br)
                     {
-                        for(int *i=in[IN],*e=i+n;i!=e;++i)
+                        for(int *i=in[IN];i!=ptr;++i)
                             printf("%d ",*i);
                         putchar('\n');
                     }
