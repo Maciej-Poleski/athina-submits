@@ -21,22 +21,22 @@ inline void ign()
 
 struct node
 {
-    int s;
-    int v;
-    int mp;
-    int ms;
+    long long   s;
+    long long   v;
+    long long   mp;
+    long long   ms;
 
     node() : s(0),v(0),mp(0),ms(0) {}
 
-    void app(int a)
+    void app(long long a)
     {
         s=a;
-        mp=ms=v=max(s,0);
+        mp=ms=v=max(s,0ll);
     }
 }*tree;
 
-int     n;
-int     s;
+int         n;
+long long   s;
 
 inline void comp_tree(int q)
 {
@@ -92,8 +92,8 @@ int main()
     while(z--)
     {
         int     m;
-        int     t;
-        int     w;
+        long long   t;
+        long long   w;
         char    c;
         scanf("%d %d\n",&n,&m);
         s=mpow2(n);
@@ -101,7 +101,7 @@ int main()
         
         for(int i=s;i<s+n;++i)
         {
-            scanf("%d ",&t);
+            scanf("%lld ",&t);
             tree[i].app(t);
         }
 
@@ -120,7 +120,7 @@ int main()
             switch(c)
             {
                 case 'U':
-                    scanf("%d %d\n",&t,&w);
+                    scanf("%lld %lld\n",&t,&w);
                     t+=s-1;
                     tree[t].app(w);
                     t>>=1;
@@ -132,9 +132,9 @@ int main()
                     dump_tree();
                     break;
                 default:
-                    scanf("%d %d\n",&t,&w);
+                    scanf("%lld %lld\n",&t,&w);
                     node e;
-                    int r=w-t;
+                    long long r=w-t;
                     --t;
                     --w;
                     t+=s;
@@ -144,7 +144,7 @@ int main()
                     //printf("%d %d %d:",r,t,w);
                     while(r)
                     {
-                        int i=1;
+                        long long   i=1;
                         for(;(t&1)==0 && r-(i<<1)>=0;t>>=1,i<<=1);
                         //printf(" %d",t);
                         e=comp(e,tree[t]);
@@ -152,7 +152,7 @@ int main()
                         t=w-r+1;
                     }
                     //putchar('\n');
-                    printf("%d\n",e.v);
+                    printf("%lld\n",e.v);
                     break;
             }
         }
