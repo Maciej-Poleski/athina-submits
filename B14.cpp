@@ -137,6 +137,9 @@ int main()
     C[x][y] = 1;
   }
 
+  for(int i=1;i<=n;++i)
+      C[i][i]=0;
+
   fmax = 0;
 
   do
