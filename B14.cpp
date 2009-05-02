@@ -2,12 +2,15 @@
 #include <list>
 #include <algorithm>
 
-const int   MAXINT = 2147483647;
-bool        *S;
-int         n,m,s,t,fmax,cp,x,y,esc,i,j;
-int         C[501][501], F[501][501];
-
 using namespace std;
+
+
+const int   MAXINT = 2147483647;
+bool        S[501];
+int         n,fmax;
+int         C[501][501], F[501][501];
+int         p[501], cfp[501];
+list<int>   q;
 
 inline void dfs1(int nn)
 {
@@ -25,7 +28,7 @@ inline void dfs1(int nn)
     }
 }
 
-void test()
+inline void test()
 {
     for(int ii=1;ii<=n;++ii)
     {
@@ -50,16 +53,11 @@ int main()
     scanf("%d",&z);
     while(z--)
     {
-        list <int> q;
+        int m,s,t,cp,x,y,esc,i,j;
         scanf("%d%d%d%d",&n,&m,&s,&t);
-
-        S=new bool[n+1];
 
         for(i=0;i<=n;++i)
             S[i]=false;
-
-
-  int p[n+1], cfp[n+1];
 
   for(i = 1; i <= n; i++)
     for(j = 1; j <= n; j++) F[i][j] = C[i][j] = 0;
@@ -130,7 +128,6 @@ int main()
 
     S[s]=true;
     test();
-      delete [] S;
     }
 
     return 0;
