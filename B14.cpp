@@ -4,13 +4,82 @@
 
 using namespace std;
 
+template <class T>
+class queue
+{
+        struct key
+        {
+            key *next;
+            T obj;
+
+            key() : next(0) {}
+        };
+
+        key *begin,*end;
+
+    public:
+        queue() : begin(0),end(0) {}
+        ~queue()
+        {
+            while(!empty())
+            {
+                pop();
+            }
+        }
+
+        void push(T obj)
+        {
+            if(end)
+            {
+                key *wsk=new key;
+                end->next=wsk;
+                end=wsk;
+
+                wsk->obj=obj;
+            }
+            else
+            {
+                begin=end=new key;
+                end->obj=obj;
+            }
+        }
+        bool empty()
+        {
+            return (begin==0?true:false);
+        }
+
+        void pop()
+        {
+            if(begin)
+            {
+                key *tmp=begin;
+                begin=begin->next;
+                delete tmp;
+            }
+            if(!begin)
+            {
+                //puts("Kolejka oczyszczona");
+                end=begin;
+            }
+        }
+
+        T front()
+        {
+            return begin->obj;
+        }
+
+        void clear()
+        {
+            this->~queue();
+        }
+};
 
 const int   MAXINT = 2147483647;
 bool        S[501];
 int         n,fmax;
 int         C[501][501], F[501][501];
 int         p[501], cfp[501];
-list<int>   q;
+queue<int>   q;
 
 inline void dfs1(int nn)
 {
@@ -76,11 +145,11 @@ int main()
     for(i = 1; i <= n; i++) p[i] = 0;
     p[s] = -1;
     cfp[s] = MAXINT;
-    q.clear(); q.push_back(s);
+    q.clear(); q.push(s);
     esc = 0;
-    while(q.size())
+    while(!q.empty())
     {
-      x = q.front(); q.pop_front();
+      x = q.front(); q.pop();
       for(y = 1; y <= n; y++)
       {
         cp = C[x][y] - F[x][y];
@@ -101,7 +170,7 @@ int main()
              esc = 1; break;
 
           }
-          q.push_back(y);
+          q.push(y);
 
         }
 
