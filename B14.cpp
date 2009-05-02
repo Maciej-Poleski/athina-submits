@@ -35,7 +35,7 @@ void test()
             {
                 if(C[ii][jj]==1 && S[jj]==false)
                 {
-                    printf("%d %d\n",min(ii,jj),max(ii,jj));
+                    printf("%d %d\n",ii,jj);
                     if((--fmax)==0)
                         return;
                 }
