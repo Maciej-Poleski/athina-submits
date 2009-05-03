@@ -88,7 +88,7 @@ struct edge
 typedef queue<int>   qi;
 typedef vector<edge> ve;
 
-const int           inf=INT_MAX;
+const int           inf=1000000000;
 int                 f;
 ve                  *G;
 bool                *S;
@@ -157,8 +157,10 @@ int main()
             G[u].push_back(edge(v,1,0));
         }
 
-        memset(S,0,sizeof(bool)*(n+1));
-        memset(v2,0,sizeof(bool)*(n+1));
+        for(int i=0;i<=n;++i)
+        {
+            S[i]=v2[i]=false;
+        }
 
         for(int i=1;i<=n;++i)
         {
@@ -185,7 +187,8 @@ int main()
             int     cfp[n+1];
             qi      q;
 
-            memset(p,0,sizeof(int)*(n+1));
+            for(int i=0;i<=n;++i)
+                p[0][i]=0;
 
             p[s][0]=-1;
             cfp[s]=inf;
