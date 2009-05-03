@@ -192,7 +192,7 @@ int main()
             for(int i=0;i<=n;++i)
                 p[0][i]=0;
 
-            p[s][0]=-1;
+            p[0][s]=-1;
             cfp[s]=inf;
             q.push(s);
             ok=false;
