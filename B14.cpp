@@ -118,17 +118,17 @@ void test(int n)
             if(!S[i->v])
             {
                 printf("%d %d\n",n,i->v);
-                --f;
+                //--f;
             }
             else
             {
                 //printf("%d->%d\n",n,i->v);
                 test(i->v);
             }
-            if(f==0)
-            {
-                break;
-            }
+            //if(f==0)
+            //{
+            //    break;
+            //}
         }
     }
 }
