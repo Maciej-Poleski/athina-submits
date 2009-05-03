@@ -1,6 +1,8 @@
 #include <cstdio>
-#include <list>
+#include <vector>
 #include <algorithm>
+#include <climits>
+#include <cstring>
 
 using namespace std;
 
@@ -74,43 +76,56 @@ class queue
         }
 };
 
-const int   MAXINT = 2147483647;
-bool        S[501];
-int         n,fmax;
-int         C[501][501], F[501][501];
-int         p[501], cfp[501];
-queue<int>   q;
-
-inline void dfs1(int nn)
+struct edge
 {
-    if(!S[nn])
+    int     v;
+    int     c;
+    int     f;
+
+    edge(int vv,int cc,int ff) : v(vv),c(cc),f(ff) {}
+};
+
+typedef queue<int>   qi;
+typedef vector<edge> ve;
+
+const int           inf=INT_MAX;
+int                 f;
+ve                  *G;
+bool                *S;
+bool                *v2;
+
+void dfs(int n)
+{
+    if(!S[n])
     {
-        S[nn]=true;
-        for(int k=1;k<=n;++k)
-        {
-            if((C[nn][k]==1 && F[nn][k]==0) || (C[k][nn]==1 && F[k][nn]==1))
-            {
-                //printf("%d->%d\n",nn,k);
-                dfs1(k);
-            }
-        }
+        S[n]=true;
+        //printf("%d ",n);
+        for(ve::iterator i=G[n].begin(),e=G[n].end();i!=e;++i)
+            if((i->c)-(i->f)==1)
+                dfs(i->v);
     }
-}
+};
 
-inline void test()
+void test(int n)
 {
-    for(int ii=1;ii<=n;++ii)
+    if(!v2[n])
     {
-        if(S[ii])
+        v2[n]=true;
+        for(ve::iterator i=G[n].begin(),e=G[n].end();i!=e;++i)
         {
-            for(int jj=1;jj<=n;++jj)
+            if(!S[i->v])
             {
-                if(C[ii][jj]==1 && S[jj]==false)
-                {
-                    printf("%d %d\n",ii,jj);
-                    if((--fmax)==0)
-                        return;
-                }
+                printf("%d %d\n",n,i->v);
+                --f;
+            }
+            else
+            {
+                //printf("%d->%d\n",n,i->v);
+                test(i->v);
+            }
+            if(f==0)
+            {
+                break;
             }
         }
     }
@@ -118,97 +133,124 @@ inline void test()
 
 int main()
 {
-    int z;
+    int             z;
     scanf("%d",&z);
     while(z--)
     {
-        int m,s,t,cp,x,y,esc,i,j;
+        int         n;
+        int         m;
+        int         s;
+        int         t;
+        int         u;
+        int         v;
+        bool        ok;
         scanf("%d%d%d%d",&n,&m,&s,&t);
 
-        for(i=0;i<=n;++i)
-            S[i]=false;
-
-  for(i = 1; i <= n; i++)
-    for(j = 1; j <= n; j++) F[i][j] = C[i][j] = 0;
-
-  for(i = 1; i <= m; i++)
-  {
-    scanf("%d%d",&x,&y);
-    C[x][y] = 1;
-  }
-
-  for(int i=1;i<=n;++i)
-      C[i][i]=0;
-
-  fmax = 0;
-
-  do
-  {
-
-    for(i = 1; i <= n; i++) p[i] = 0;
-    p[s] = -1;
-    cfp[s] = MAXINT;
-    q.clear(); q.push(s);
-    esc = 0;
-    while(!q.empty())
-    {
-      x = q.front(); q.pop();
-      for(y = 1; y <= n; y++)
-      {
-        cp = C[x][y] - F[x][y];
-        if(cp && !p[y])
+        f=0;
+        G=new ve[n+1];
+        S=new bool[n+1];
+        v2=new bool[n+1];
+        
+        for(int i=0;i<m;++i)
         {
-          p[y] = x;
-          cfp[y] = cfp[x] > cp ? cp : cfp[x];
-          if(y == t)
-          {
-             fmax += cfp[t];
-             while(y != s)
-             {
-               x = p[y];
-               F[x][y] += cfp[t];
-               F[y][x] -= cfp[t];
-               y = x;
-             }
-             esc = 1; break;
-
-          }
-          q.push(y);
-
+            scanf("%d%d",&u,&v);
+            G[u].push_back(edge(v,1,0));
         }
 
-      }
-      if(esc) break;
+        memset(S,0,sizeof(bool)*(n+1));
+        memset(v2,0,sizeof(bool)*(n+1));
 
+        for(int i=1;i<=n;++i)
+        {
+            int     &u=i;
+            for(ve::iterator j=G[u].begin(),e=G[u].end();j!=e;++j)
+            {
+                int &v=j->v;
+                ok=false;
+                for(ve::iterator k=G[v].begin(),ek=G[v].end();k!=ek;++k)
+                {
+                    if(ok=(k->v==u))
+                        break;
+                }
+                if(!ok)
+                {
+                    G[v].push_back(edge(u,0,0));
+                }
+            }
+        }
+
+        for(;;)
+        {
+            int     p[2][n+1];
+            int     cfp[n+1];
+            qi      q;
+
+            memset(p,0,sizeof(int)*(n+1));
+
+            p[s][0]=-1;
+            cfp[s]=inf;
+            q.push(s);
+            ok=false;
+
+            while(!q.empty())
+            {
+                int u=q.front();
+                q.pop();
+
+                for(int i=0,e=G[u].size();i<e;++i)
+                {
+                    int &v=G[u][i].v;
+                    int tmp=G[u][i].c-G[u][i].f;
+
+                    if(tmp && (p[0][v]==0))
+                    {
+                        p[0][v]=u;
+                        p[1][v]=i;
+
+                        cfp[v]=min(tmp,cfp[u]);
+
+                        if(v==t)
+                        {
+                            f+=cfp[t];
+                            int v=t;
+
+                            while(v!=s)
+                            {
+                                int u=p[0][v];
+
+                                G[u][p[1][v]].f+=cfp[t];
+
+                                for(ve::iterator q=G[v].begin(),e=G[v].end();q!=e;++q)
+                                    if(q->v==u)
+                                    {
+                                        q->f-=cfp[t];
+                                        break;
+                                    }
+
+                                v=u;
+                            }
+                            ok=true;
+                            break;
+                        }
+                        q.push(v);
+                    }
+                }
+                if(ok)
+                    break;
+            }
+            if(!ok)
+                break;
+        }
+
+        printf("%d\n",f);
+
+        dfs(s);
+        //putchar('\n');
+        test(s);
+
+        delete [] G;
+        delete [] S;
+        delete [] v2;
     }
-    if(!esc) break;
-
-  } while(true);
-
-  /*for(x = 1; x <= n; x++)
-    for(y = 1; y <= n; y++)
-      if(C[x][y])
-          printf("%d -> %d %d/%d\n",x,y,F[x][y],C[x][y]);*/
-
-  printf("%d\n",fmax);
-      dfs1(s);
-
-      /*for(int i=1;i<=n;++i)
-          if(S[i])
-              printf("%d ",i);
-          putchar('\n');*/
-
-    S[s]=true;
-    test();
-    }
-
     return 0;
 }
-// I Liceum Ogólnokształcące
-// im. K. Brodzińskiego
-// w Tarnowie
-//--------------------------
-// Koło informatyczne 2006/7
-//--------------------------
-// P029 Maksymalny przepływ
-// Wersja z macierzami sąsiedztwa
