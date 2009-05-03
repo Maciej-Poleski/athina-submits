@@ -88,7 +88,7 @@ struct edge
 typedef queue<int>   qi;
 typedef vector<edge> ve;
 
-const int           inf=1000000000;
+const int           inf=2000000000;
 int                 f;
 ve                  *G;
 bool                *S;
@@ -113,6 +113,8 @@ void test(int n)
         v2[n]=true;
         for(ve::iterator i=G[n].begin(),e=G[n].end();i!=e;++i)
         {
+            if(i->c==0)
+                continue;
             if(!S[i->v])
             {
                 printf("%d %d\n",n,i->v);
