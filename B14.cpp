@@ -118,17 +118,17 @@ void test(int n)
             if(!S[i->v])
             {
                 printf("%d %d\n",n,i->v);
-                //--f;
+                --f;
             }
             else
             {
                 //printf("%d->%d\n",n,i->v);
                 test(i->v);
             }
-            //if(f==0)
-            //{
-            //    break;
-            //}
+            if(f==0)
+            {
+                break;
+            }
         }
     }
 }
@@ -159,10 +159,8 @@ int main()
             G[u].push_back(edge(v,1,0));
         }
 
-        for(int i=0;i<=n;++i)
-        {
-            S[i]=v2[i]=false;
-        }
+        memset(S,0,n+1);
+        memset(v2,0,n+1);
 
         for(int i=1;i<=n;++i)
         {
@@ -189,8 +187,7 @@ int main()
             int     cfp[n+1];
             qi      q;
 
-            for(int i=0;i<=n;++i)
-                p[0][i]=0;
+            memset(p,0,sizeof(int)*(n+1));
 
             p[0][s]=-1;
             cfp[s]=inf;
