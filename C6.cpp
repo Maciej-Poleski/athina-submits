@@ -32,17 +32,18 @@ int             I;
 info            *t;
 int             *p;
 int             tt;
+info            d[18][199999];
 
 void dfs(int n)
 {
-    t[I++]=info(n,h++);
+    d[0][I++]=info(n,h++);
     if(G[n].h==-1)
         G[n].h=I-1;
     
     for(vector<int>::iterator i=G[n].d.begin(),e=G[n].d.end();i!=e;++i)
     {
         dfs(*i);
-        t[I++]=info(n,h-1);
+        d[0][I++]=info(n,h-1);
     }
     --h;
     return;
@@ -69,21 +70,12 @@ int main()
             G[x].d.push_back(i);
         }
 
-        t=new info[n<<1];
-
         h=0;
         I=0;
         dfs(0);
 
-        info    d[tt][2*n-1];
-
-        for(int i=0;i<n*2-1;++i)
-            d[0][i]=t[i];
-
         /*for(int i=0;i<n*2-1;++i)
             printf("%d %d\n",d[0][i].v,d[0][i].h);*/
-
-        delete [] t;
         
         p=new int[tt+1];
 
