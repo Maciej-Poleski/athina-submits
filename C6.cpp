@@ -62,13 +62,14 @@ int main()
         const int tt=static_cast<int>(ceil(log10(2*n-1)/log10(2)));
 
         G=new node[n];
-        t=new info[n<<1];
 
         for(int i=1;i<n;++i)
         {
             scanf("%d",&x);
             G[x].d.push_back(i);
         }
+
+        t=new info[n<<1];
 
         h=0;
         I=0;
@@ -92,7 +93,7 @@ int main()
 
         for(int i=1;i<tt;++i)
         {
-            for(int j=0;(j+p[i-1]<n*2);++j)
+            for(int j=0;(j+p[i-1]<n*2-1);++j)
                 d[i][j]=min(d[i-1][j],d[i-1][j+p[i-1]]);
         }
 
