@@ -59,6 +59,9 @@ int main()
             s[n-i-1]=a[i];
         for(int i=0;i<n;++i)
             s[n+n-i]=s[3*n-i]=b[i];
+
+        delete [] a;
+        delete [] b;
         
         int *PREF2=CP(3*n+1,s-1);
 
@@ -66,18 +69,17 @@ int main()
             printf("%d ",PREF2[i]);
         putchar('\n');*/
 
-        for(int i=0;i<n;++i)
-            if((ok=(PREF1[n+2+i]+PREF2[3*n+1-i]==n-1)))
+        for(int i=0;i<=n;++i)
+            if((ok=(PREF1[n+2+i]+PREF2[2*n+2-i]==n-1)))
             {
                 printf("TAK\n");
+                //printf(" %d\n",i);
                 break;
             }
 
         if(!ok)
             printf("NIE\n");
 
-        delete [] a;
-        delete [] b;
         delete [] PREF1;
         delete [] PREF2;
         delete [] s;
