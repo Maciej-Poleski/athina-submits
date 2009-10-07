@@ -85,7 +85,7 @@ int main()
 			for(vector<edge>::iterator j=G[v].next.begin(),e=G[v].next.end();j!=e;++j)
 			{
 				G[j->d].count0+=G[v].count0;
-				if(G[j->d].max0<G[v].max0+j->v)
+				if(G[j->d].max0<=G[v].max0+j->v)
 				{
 					G[j->d].max0=G[v].max0+j->v;
 					G[j->d].selectedX=v;
@@ -98,7 +98,7 @@ int main()
 			for(vector<edge>::iterator j=G[v].back.begin(),e=G[v].back.end();j!=e;++j)
 			{
 				G[j->d].countN+=G[v].countN;
-				if(G[j->d].minN>G[v].minN+j->v)
+				if(G[j->d].minN>=G[v].minN+j->v)
 				{
 					G[j->d].minN=G[v].minN+j->v;
 					G[j->d].selectedN=v;
