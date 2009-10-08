@@ -84,8 +84,8 @@ int main()
 		{
 			for(vector<edge>::iterator j=G[v].next.begin(),e=G[v].next.end();j!=e;++j)
 			{
-				G[j->d].count0+=G[v].count0;
-				if(G[j->d].max0<=G[v].max0+j->v)
+				G[j->d].count0=(G[v].count0+G[j->d].count0)%1000;
+				if(G[j->d].max0<G[v].max0+j->v)
 				{
 					G[j->d].max0=G[v].max0+j->v;
 					G[j->d].selectedX=v;
@@ -97,8 +97,8 @@ int main()
 		{
 			for(vector<edge>::iterator j=G[v].back.begin(),e=G[v].back.end();j!=e;++j)
 			{
-				G[j->d].countN+=G[v].countN;
-				if(G[j->d].minN>=G[v].minN+j->v)
+				G[j->d].countN=(G[j->d].countN+G[v].countN)%1000;
+				if(G[j->d].minN>G[v].minN+j->v)
 				{
 					G[j->d].minN=G[v].minN+j->v;
 					G[j->d].selectedN=v;
@@ -113,7 +113,7 @@ int main()
 			cb=0;
 			int x;
 			scanf("%d ",&x);
-			printf("%d\n",G[x].count0*G[x].countN);
+			printf("%d\n",(G[x].count0*G[x].countN)%1000);
 			int v=x;
 			while(v!=1)
 			{
@@ -138,4 +138,5 @@ int main()
 		}
 		delete [] G;
 	}
+	return 0;
 }
