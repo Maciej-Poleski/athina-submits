@@ -1,6 +1,7 @@
 #include <vector>
 #include <algorithm>
 #include <cstdio>
+#include <climits>
 
 using namespace std;
 
@@ -31,18 +32,24 @@ int main()
 		vector<int>	wynik;
 		wynik.push_back(1);
 		tab[1].p=0;
+		tab[0].v=INT_MIN;
+		tab[0].p=0;
 
 		for(int i=2;i<=n;++i)
 		{
-			int p=lower_bound(wynik.begin(),wynik.end(),i,cmp)-wynik.begin();
-			if(p==wynik.size())
+			vector<int>::iterator ttt=lower_bound(wynik.begin(),wynik.end(),i,cmp);
+			int p=ttt-wynik.begin();
+			if(ttt==wynik.end())
 			{
 				wynik.push_back(i);
 				tab[i].p=wynik[p-1];
 				continue;
 			}
 			wynik[p]=i;
-			tab[i].p=wynik[p-1];
+			if(p!=0)
+				tab[i].p=wynik[p-1];
+			else
+				tab[i].p=0;
 		}
 
 		int *ww=new int[n];
