@@ -1,3 +1,5 @@
+/* Wersja maksymalnie optymalizowana */
+
 #include <cstdio>
 #include <cstring>
 #include <stdint.h>
@@ -37,7 +39,7 @@ bool       A[21][21];
 int bitcount(uint32_t x)
 {
     int w=0;
-    for(int i=1;i<=30;++i)
+    for(int i=1;i<=20;++i)
 	w+=get(x,i);
     return w;
 }
@@ -72,15 +74,17 @@ int main()
 	    getchar();
 	}
 	T[0]=1;
-	for(uint32_t S=1;S<=(1<<n);++S)
+	for(uint32_t S=1;S<(1<<n);++S)
 	{
 	    T[S]=0;
-	    for(int k=1;k<=25;++k)
+	    for(int k=1;k<=20;++k)
 	    {
 		if(get(S,k))
 		{
 		    T[S]+=A[bitcount(S)][k]*T[S&(~(1<<(k-1)))];
 		}
+		if((S>>(k))==0)
+			break;
 	    }
 	}
 	printf("%llu\n",T[(1<<n)-1]);
