@@ -3,7 +3,7 @@
 #include <cmath>
 #include <algorithm>
 
-const int MAX_SIZE=100000001;
+long long MAX_SIZE=0;
 
 bool *sito;
 int  *prime;
@@ -19,6 +19,17 @@ long long pow(long long n,int k)
 
 int main()
 {
+    int z;
+    scanf("%d",&z);
+    long long in[z];
+    for(int i=0;i<z;++i)
+    {
+	scanf("%lld",in+i);
+	if(in[i]>MAX_SIZE)
+	    MAX_SIZE=in[i];
+    }
+    MAX_SIZE=sqrt(MAX_SIZE)+2;
+
     /* generuje sito */
     sito=new bool[MAX_SIZE+5];
     memset(sito,0,MAX_SIZE+5);
@@ -46,15 +57,13 @@ int main()
 	*ptr++=100000007;
     }
     delete [] sito;
-    int z;
-    scanf("%d",&z);
 
-    while(z--)
+    for(int i=0;i<z;++i)
     {
 	long long x,xx;
 	long long w=1;
 	int k=0;
-	scanf("%lld",&x);
+	x=in[i];
 
 	xx=x;
 
@@ -71,12 +80,12 @@ int main()
 
 	if(k>0)
 	{
-		w=(1L<<k)-(1L<<(k-1));
+		w=(1LL<<k)-(1LL<<(k-1));
 	}
 
 	// Faktoryzacja właściwa
 
-	for(int i=1;x>1 && i<=pc;++i)
+	for(int i=1;prime[i]*prime[i]<=x && i<=pc;++i)
 	{
 	    k=0;
 	    int p=prime[i];
