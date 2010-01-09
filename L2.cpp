@@ -32,8 +32,12 @@ mlesr mles(long long a,long long b,long long n)
 	return mlesr();
     mlesr r;
     long long x0=p.x*(b/p.d);
-    while(x0<0)
-	x0+=n;
+    if(x0<0)
+    {
+	x0+=n*((-x0)/n);
+    	if(x0<0)
+	    x0+=n;
+    }
     x0%=n;
     for(int i=0;i<p.d;++i)
 	++r.c,r.x0=min(r.x0,(x0+i*(n/p.d))%n);
@@ -55,6 +59,9 @@ int main()
     {
 	int a,b,n;
 	scanf("%d%d%d",&a,&b,&n);
+	if(b<0)
+	    b=-b,a=-a;
+	b%=n;
 	if(n==1)
 	{
 	    printf("1 0\n");
