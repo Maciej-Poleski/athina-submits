@@ -52,11 +52,11 @@ int main()
     {
 	int a,b,n;
 	scanf("%d%d%d",&a,&b,&n);
-	/*if(n==1)
+	if(n==1)
 	{
 	    printf("1 0\n");
 	    continue;
-	}*/
+	}
 	if(a==0 && b==0)
 	{
 	    printf("%d 0\n",n);
