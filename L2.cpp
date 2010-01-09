@@ -14,7 +14,7 @@ struct eer
 struct mlesr
 {
     long long x0,c;
-    mlesr() : x0(MAX_LONG_LONG),c(0) {}
+    mlesr() : x0(MAX_LONG_LONG),c(0LL) {}
 };
 
 eer ee(long long a,long long b)
@@ -52,6 +52,21 @@ int main()
     {
 	int a,b,n;
 	scanf("%d%d%d",&a,&b,&n);
+	/*if(n==1)
+	{
+	    printf("1 0\n");
+	    continue;
+	}*/
+	if(a==0 && b==0)
+	{
+	    printf("%d 0\n",n);
+	    continue;
+	}
+	if(a==0)
+	{
+	    printf("0\n");
+	    continue;
+	}
 	if(a<0)
 	    a=-a,b=-b;
 	mlesr w=mles(a,b,n);
