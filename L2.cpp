@@ -31,7 +31,10 @@ mlesr mles(long long a,long long b,long long n)
     if(b%p.d)
 	return mlesr();
     mlesr r;
-    long long x0=p.x*(b/p.d)%n;
+    long long x0=p.x*(b/p.d);
+    while(x0<0)
+	x0+=n;
+    x0%=n;
     for(int i=0;i<p.d;++i)
 	++r.c,r.x0=min(r.x0,(x0+i*(n/p.d))%n);
     return r;
