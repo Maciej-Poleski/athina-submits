@@ -15,9 +15,10 @@ struct mlesr
 {
     long long x0,c;
     mlesr() : x0(MAX_LONG_LONG),c(0LL) {}
+    mlesr(long long aa,long long bb) : x0(aa),c(bb) {}
 };
 
-eer ee(long long a,long long b)
+inline eer ee(long long a,long long b)
 {
     if(b==0)
 	return eer(a,1,0);
@@ -25,8 +26,19 @@ eer ee(long long a,long long b)
     return eer(p.d,p.y,p.x-(a/b)*p.y);
 }
 
-mlesr mles(long long a,long long b,long long n)
+inline mlesr mles(long long a,long long b,long long n)
 {
+    if(b<0)
+	b=-b,a=-a;
+    b%=n;
+    if(n==1)
+	return mlesr(0,1);
+    if(a==0 && b==0)
+	return mlesr(0,n);
+    if(a==0)
+	return mlesr();
+    if(a<0)
+	a=-a,b=-b;
     eer p=ee(a,n);
     if(b%p.d)
 	return mlesr();
@@ -46,44 +58,17 @@ mlesr mles(long long a,long long b,long long n)
 
 int main()
 {
-    /*while(2)
-    {
-	int a,b;
-	scanf("%d%d",&a,&b);
-	eer w=ee(a,b);
-	printf("%d %d %d\n",w.d,w.x,w.y);
-    }*/
     int z;
     scanf("%d",&z);
     while(z--)
     {
 	int a,b,n;
 	scanf("%d%d%d",&a,&b,&n);
-	if(b<0)
-	    b=-b,a=-a;
-	b%=n;
-	if(n==1)
-	{
-	    printf("1 0\n");
-	    continue;
-	}
-	if(a==0 && b==0)
-	{
-	    printf("%d 0\n",n);
-	    continue;
-	}
-	if(a==0)
-	{
-	    printf("0\n");
-	    continue;
-	}
-	if(a<0)
-	    a=-a,b=-b;
 	mlesr w=mles(a,b,n);
 	if(w.c)
 	{
-	    while(w.x0<0)
-		w.x0+=n;
+//	    while(w.x0<0)
+//		w.x0+=n;
 	    printf("%lld %lld\n",w.c,w.x0);
 	}
 	else
