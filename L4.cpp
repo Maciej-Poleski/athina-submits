@@ -140,18 +140,25 @@ int main()
 	    }
 	    else if(w.c==1)
 	    {
+		if(w.x0==0)
+		    w.x0=n[i];
 		printf("%lld %lld\n",w.x0,w.x0+n[i]);
 		continue;
 	    }
 	    else
 	    {
+		if(w.x0==0)
+		{
+		    w.x0=w.x1;
+		    w.x1+=n[i];
+		}
 		printf("%lld %lld\n",w.x0,w.x1);
 		continue;
 	    }
 	}
 	else if(m-bad==0)
 	{
-	    printf("0 1\n");
+	    printf("1 2\n");
 	    continue;
 	}
 	/*
@@ -206,7 +213,8 @@ int main()
 	    }
 	    a[i]*=t.x0;
 	    a[i]%=n[i];
-	    //fprintf(stderr,"a[%d]: %d\n",i,a[i]);
+	    if(a[i]!=1)
+	    	fprintf(stderr,"a[%d]: %d\n",i,a[i]);
 	    b[i]*=t.x0;
 	    b[i]%=n[i];
 	    //fprintf(stderr,"b[%d]: %d\n",i,b[i]);
@@ -232,8 +240,10 @@ int main()
 	    x+=(ee(n[i],M/n[i]).y*(M/n[i]))*(((b[i]*(A/a[i])))%n[i]);
 	}
 	x%=M;
-	if(x<0)
+	while(x<0)
 	    x+=M;
+	if(x==0)
+	    x=M;
 	printf("%lld %lld\n",x,x+M);
     }
     return 0;
