@@ -202,11 +202,12 @@ int main()
 		continue;
 	    if(a[i]<0)
 		a[i]=-a[i],b[i]=-b[i];
-	    //eer dd=ee(a[i],n[i]);
-	    //a[i]/=dd.d;
+	    eer dd=ee(a[i],n[i]);
+	    a[i]/=dd.d;
 	    //if(b[i]%dd.d)
 		//throw 2;
-	    //b[i]/=dd.d;
+	    b[i]/=dd.d;
+	    n[i]/=dd.d;
 	    mlesr t=mles(a[i],1,n[i]);
 	    if(t.c==0)
 	    {
