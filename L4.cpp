@@ -200,6 +200,8 @@ int main()
 	{
 	    if(e[i])
 		continue;
+	    if(a[i]<0)
+		a[i]=-a[i],b[i]=-b[i];
 	    eer dd=ee(a[i],n[i]);
 	    a[i]/=dd.d;
 	    b[i]/=dd.d;
@@ -213,17 +215,17 @@ int main()
 	    }
 	    a[i]*=t.x0;
 	    a[i]%=n[i];
-	    if(a[i]!=1)
-	    	fprintf(stderr,"a[%d]: %d\n",i,a[i]);
+	    //if(a[i]!=1)
+	    //	fprintf(stderr,"a[%d]: %d\n",i,a[i]);
 	    b[i]*=t.x0;
 	    b[i]%=n[i];
 	    //fprintf(stderr,"b[%d]: %d\n",i,b[i]);
 	}
 	if(!ok)
 	    continue;
-	long long A=1;
-	for(int i=0;i<m;++i)
-	    A*=e[i]?1:a[i];
+	//long long A=1;
+	//for(int i=0;i<m;++i)
+	//    A*=e[i]?1:a[i];
 	//long long B=1;
 	//for(int i=0;i<m;++i)
 	//    B*=b[i];
@@ -237,7 +239,7 @@ int main()
 		continue;
 	    //printf("%d: %lld %lld\n",i+1,ee(n[i],M/n[i]).x,ee(n[i],M/n[i]).y);
 	    //printf("%lld*%lld*%lld*%lld\n",ee(n[i],M/n[i]).y,(M/n[i]),(long long)b[i],(A/a[i]));
-	    x+=(ee(n[i],M/n[i]).y*(M/n[i]))*(((b[i]*(A/a[i])))%n[i]);
+	    x+=(ee(n[i],M/n[i]).y*(M/n[i]))*b[i];
 	}
 	x%=M;
 	while(x<0)
