@@ -88,9 +88,9 @@ int main()
 	int m;
 	int bad=0;
 	scanf("%d",&m);
-	int a[m];
-	int b[m];
-	int n[m];
+	long long a[m];
+	long long b[m];
+	long long n[m];
 	bool e[m];
 	bool ok=true;
 	memset(e,0,m);
