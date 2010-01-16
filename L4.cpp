@@ -95,7 +95,7 @@ int main()
 	bool ok=true;
 	memset(e,0,m);
 	for(int i=0;i<m;++i)
-	    scanf("%d%d%d",a+i,b+i,n+i);
+	    scanf("%lld%lld%lld",a+i,b+i,n+i);
 	for(int i=0;i<m;++i)
 	    a[i]%=n[i],b[i]%=n[i];
 	for(int i=0;i<m;++i)
