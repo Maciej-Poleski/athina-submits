@@ -154,6 +154,7 @@ int main()
 	    printf("0 1\n");
 	    continue;
 	}
+	/*
 	long long A=1;
 	for(int i=0;i<m;++i)
 	    A*=e[i]?1:a[i];
@@ -170,15 +171,67 @@ int main()
 		continue;
 	    //printf("%d: %lld %lld\n",i+1,ee(n[i],M/n[i]).x,ee(n[i],M/n[i]).y);
 	    //printf("%lld*%lld*%lld*%lld\n",ee(n[i],M/n[i]).y,(M/n[i]),(long long)b[i],(A/a[i]));
-	    x+=(ee(n[i],M/n[i]).y*(M/n[i]))*(b[i]*(A/a[i]));
+	    x+=(ee(n[i],M/n[i]).y*(M/n[i]))*(((b[i]*(A/a[i])))%n[i]);
 	}
+	//printf("%lld %lld\n",x/n[0],x/n[1]);
+	A%=M;
+	while(x<0)
+	    x+=M;
 	while(x%A)
 	    x+=M;
 	x/=A;
 	if(x>M || x<0)
 	{
-	    x-=(x/M)*M;
+	    //x-=(x/M)*M;
+	    x%=M;
 	}
+	if(x<0)
+	    x+=M;
+	printf("%lld %lld\n",x,x+M);*/
+	ok=true;
+	for(int i=0;i<m;++i)
+	{
+	    if(e[i])
+		continue;
+	    eer dd=ee(a[i],n[i]);
+	    a[i]/=dd.d;
+	    b[i]/=dd.d;
+	    mlesr t=mles(a[i],1,n[i]);
+	    if(t.c==0)
+	    {
+		printf("NIE\n");
+		//fprintf(stderr,"__203__\n");
+		ok=false;
+		break;			// CHOKE ME
+	    }
+	    a[i]*=t.x0;
+	    a[i]%=n[i];
+	    //fprintf(stderr,"a[%d]: %d\n",i,a[i]);
+	    b[i]*=t.x0;
+	    b[i]%=n[i];
+	    //fprintf(stderr,"b[%d]: %d\n",i,b[i]);
+	}
+	if(!ok)
+	    continue;
+	long long A=1;
+	for(int i=0;i<m;++i)
+	    A*=e[i]?1:a[i];
+	//long long B=1;
+	//for(int i=0;i<m;++i)
+	//    B*=b[i];
+	long long M=1;
+	for(int i=0;i<m;++i)
+	    M*=e[i]?1:n[i];
+	long long x=0;
+	for(int i=0;i<m;++i)
+	{
+	    if(e[i])
+		continue;
+	    //printf("%d: %lld %lld\n",i+1,ee(n[i],M/n[i]).x,ee(n[i],M/n[i]).y);
+	    //printf("%lld*%lld*%lld*%lld\n",ee(n[i],M/n[i]).y,(M/n[i]),(long long)b[i],(A/a[i]));
+	    x+=(ee(n[i],M/n[i]).y*(M/n[i]))*(((b[i]*(A/a[i])))%n[i]);
+	}
+	x%=M;
 	if(x<0)
 	    x+=M;
 	printf("%lld %lld\n",x,x+M);
