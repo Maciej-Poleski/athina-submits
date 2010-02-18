@@ -1,7 +1,7 @@
 #include <cstdio>
 #include <cstring>
 
-const int maxSize=2000000;
+const int maxSize=2000005;
 
 char W[maxSize];
 char T[maxSize];
