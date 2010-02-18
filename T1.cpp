@@ -3,13 +3,7 @@
 
 const int maxSize=2000005;
 
-char W[maxSize];
-char T[maxSize];
 int n;
-int PS[maxSize+1];
-int R[maxSize+1];
-int A[maxSize+1];
-int B[maxSize+1];
 
 void kmp(char* const W,const int N,int* const PS,char* const T,const int M,int* const R)
 {
@@ -28,6 +22,13 @@ int main()
 {
     int z;
     scanf("%d\n",&z);
+    char *W=new char[maxSize];
+    char *T=new char[maxSize];
+    int *PS=new int[maxSize+1];
+    int *R=new int[maxSize+1];
+    int *A=new int[maxSize+1];
+    int *B=new int[maxSize+1];
+
     while(z--)
     {
 	scanf("%s\n",W);
@@ -58,5 +59,13 @@ int main()
 	    printf("\n");
 	}
     }
+
+    delete [] W;
+    delete [] T;
+    delete [] PS;
+    delete [] R;
+    delete [] A;
+    delete [] B;
+
     return 0;
 }
