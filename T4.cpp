@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <algorithm>
+#include <cstring>
 
 using namespace std;
 
@@ -79,13 +80,14 @@ int main()
 	delete [] PPR;
 
 	int w=0;
-	int *ppp=new int[m+5];
-	int *ptr=ppp;
+	bool rozw[m+1];
+
+	memset(rozw,0,m+1);
 
 	if(R[0]==n)
 	{
 	    ++w;
-	    *ptr++=0;
+	    rozw[0]=true;
 	}
 	for(int i=1;i<m;++i)
 	{
@@ -93,23 +95,24 @@ int main()
 		--RR[m-i];
 	    for(;R[i]+RR[m-i]>=n;++w,--RR[m-i])
 	    {
-		if((ptr!=ppp) && (*(ptr-1)>=(i-RR[m-i])))
+		if(rozw[i-RR[m-i]])
 		{
 		    --w;
 		    continue;
 		}
-		*ptr++=i-RR[m-i];
+		rozw[i-RR[m-i]]=true;
+		//i+=max(R[i]-1,0);
 	    }
 	}
 
 	printf("%d",w);
-	for(int i=0;i<w;++i)
-	    printf(" %d",ppp[i]);
+	for(int i=0;i<=m;++i)
+	    if(rozw[i])
+		printf(" %d",i);
 	printf("\n");
 
 	delete [] R;
 	delete [] RR;
-	delete [] ppp;
     }
     return 0;
 }
