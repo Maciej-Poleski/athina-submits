@@ -93,6 +93,11 @@ int main()
 		--RR[m-i];
 	    for(;R[i]+RR[m-i]>=n;++w,--RR[m-i])
 	    {
+		if((ptr!=ppp) && (*(ptr-1)>=(i-RR[m-i])))
+		{
+		    --w;
+		    continue;
+		}
 		*ptr++=i-RR[m-i];
 	    }
 	}
