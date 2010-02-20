@@ -27,22 +27,27 @@ int main()
     int *R=0;
     int *RR=0;
     int z;
+    const int n=1000000,m=1000000;
+    W=new char[n+5];
+    T=new char[m+5];
+    PP=new int[n+5];
+    R=new int[m+5];
+    WR=new char[n+5];
+    TR=new char[m+5];
+    PPR=new int[n+5];
+    RR=new int[m+5];
+    bool rozw[m+5];
     scanf("%d\n",&z);
     while(z--)
     {
 	int n,m;
 	scanf("%d ",&n);
-	W=new char[n+5];
+
 	scanf("%s\n",W);
 	scanf("%d ",&m);
-	T=new char[m+5];
+
 	scanf("%s\n",T);
-	PP=new int[n+5];
-	R=new int[m+5];
-	WR=new char[n+5];
-	TR=new char[m+5];
-	PPR=new int[n+5];
-	RR=new int[m+5];
+
 	for(int i=n-1;i>=0;--i)
 	    WR[n-i-1]=W[i];
 	for(int i=m-1;i>=0;--i)
@@ -72,15 +77,10 @@ int main()
 	    printf("%d ",RR[i]);
 	printf("\n");*/
 
-	delete [] T;
-	delete [] TR;
-	delete [] W;
-	delete [] WR;
-	delete [] PP;
-	delete [] PPR;
+
 
 	int w=0;
-	bool rozw[m+1];
+
 
 	memset(rozw,0,m+1);
 
@@ -111,8 +111,15 @@ int main()
 		printf(" %d",i);
 	printf("\n");
 
-	delete [] R;
-	delete [] RR;
+
     }
+    delete [] T;
+    delete [] TR;
+    delete [] W;
+    delete [] WR;
+    delete [] PP;
+    delete [] PPR;
+    delete [] R;
+    delete [] RR;
     return 0;
 }
