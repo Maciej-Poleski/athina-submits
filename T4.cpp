@@ -31,11 +31,11 @@ int main()
 {
     int z;
 
-    scanf("%d\n",&z);
+    scanf("%d",&z);
     while(z--)
     {
 	int n,m;
-	scanf("%d %s\n%d %s\n",&n,W,&m,T);
+	scanf("%d %s\n%d %s",&n,W,&m,T);
 
 	for(int i=n-1;i>=0;--i)
 	    WR[n-i-1]=W[i];
