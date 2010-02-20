@@ -35,12 +35,7 @@ int main()
     while(z--)
     {
 	int n,m;
-	scanf("%d ",&n);
-
-	scanf("%s\n",W);
-	scanf("%d ",&m);
-
-	scanf("%s\n",T);
+	scanf("%d %s\n%d %s\n",&n,W,&m,T);
 
 	for(int i=n-1;i>=0;--i)
 	    WR[n-i-1]=W[i];
@@ -71,7 +66,8 @@ int main()
 	    printf("%d ",RR[i]);
 	printf("\n");*/
 
-	memset(rozw,0,m+1);
+	for(int i=0;i<=m-n;++i)
+	    rozw[i]=false;
 
 	if(R[0]==n)
 	{
@@ -81,18 +77,21 @@ int main()
 	{
 	    if(RR[m-i]==n)
 		--RR[m-i];
-	    for(;R[i]+RR[m-i]>=n;--RR[m-i])
-	    {
-		rozw[i-RR[m-i]]=true;
+	    int am=R[i]+RR[m-i]-n;
+	    for(int j=0;j<=am;++j)
+		rozw[i-RR[m-i]+j]=true;
+	    //for(;R[i]+RR[m-i]>=n;--RR[m-i])
+	    //{
+		//rozw[i-RR[m-i]]=true;
 		//i+=max(R[i]-1,0);
-	    }
+	    //}
 	}
 
 	int w=0;
-	for(int i=0;i<=m;++i)
+	for(int i=0;i<=m-n;++i)
 	    w+=rozw[i];
 	printf("%d",w);
-	for(int i=0;i<=m;++i)
+	for(int i=0;i<=m-n;++i)
 	    if(rozw[i])
 		printf(" %d",i);
 	printf("\n");
