@@ -2,9 +2,20 @@
 #include <algorithm>
 #include <cstring>
 
+const int n=1000000,m=1000000;
+char W[n+5];
+char T[m+5];
+int PP[n+5];
+int R[m+5];
+char WR[n+5];
+char TR[m+5];
+int PPR[n+5];
+int RR[m+5];
+bool rozw[m+5];
+
 using namespace std;
 
-void f(char *const W,int N,int *const PP,char *const T,int M,int *const R)
+inline void f(char *const W,int N,int *const PP,char *const T,int M,int *const R)
 {
     for(int j,i=0,k=0;k<M;k+=j,i=max(0,i-j))
     {
@@ -18,25 +29,8 @@ void f(char *const W,int N,int *const PP,char *const T,int M,int *const R)
 
 int main()
 {
-    char *T=0;
-    char *TR=0;
-    char *W=0;
-    char *WR=0;
-    int *PP=0;
-    int *PPR=0;
-    int *R=0;
-    int *RR=0;
     int z;
-    const int n=1000000,m=1000000;
-    W=new char[n+5];
-    T=new char[m+5];
-    PP=new int[n+5];
-    R=new int[m+5];
-    WR=new char[n+5];
-    TR=new char[m+5];
-    PPR=new int[n+5];
-    RR=new int[m+5];
-    bool rozw[m+5];
+
     scanf("%d\n",&z);
     while(z--)
     {
@@ -77,34 +71,26 @@ int main()
 	    printf("%d ",RR[i]);
 	printf("\n");*/
 
-
-
-	int w=0;
-
-
 	memset(rozw,0,m+1);
 
 	if(R[0]==n)
 	{
-	    ++w;
 	    rozw[0]=true;
 	}
 	for(int i=1;i<m;++i)
 	{
 	    if(RR[m-i]==n)
 		--RR[m-i];
-	    for(;R[i]+RR[m-i]>=n;++w,--RR[m-i])
+	    for(;R[i]+RR[m-i]>=n;--RR[m-i])
 	    {
-		if(rozw[i-RR[m-i]])
-		{
-		    --w;
-		    continue;
-		}
 		rozw[i-RR[m-i]]=true;
 		//i+=max(R[i]-1,0);
 	    }
 	}
 
+	int w=0;
+	for(int i=0;i<=m;++i)
+	    w+=rozw[i];
 	printf("%d",w);
 	for(int i=0;i<=m;++i)
 	    if(rozw[i])
@@ -113,13 +99,5 @@ int main()
 
 
     }
-    delete [] T;
-    delete [] TR;
-    delete [] W;
-    delete [] WR;
-    delete [] PP;
-    delete [] PPR;
-    delete [] R;
-    delete [] RR;
     return 0;
 }
