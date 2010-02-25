@@ -11,7 +11,7 @@ char WR[n+5];
 char TR[m+5];
 int PPR[n+5];
 int RR[m+5];
-bool rozw[m+5];
+int rozw[m+5];
 
 using namespace std;
 
@@ -67,19 +67,24 @@ int main()
 	printf("\n");*/
 
 	for(int i=0;i<=m-n;++i)
-	    rozw[i]=false;
+	    rozw[i]=0;
 
 	if(R[0]==n)
 	{
-	    rozw[0]=true;
+	    ++rozw[0];
+	    --rozw[1];
 	}
 	for(int i=1;i<m;++i)
 	{
 	    if(RR[m-i]==n)
 		--RR[m-i];
 	    int am=R[i]+RR[m-i]-n;
-	    for(int j=0;j<=am;++j)
-		rozw[i-RR[m-i]+j]=true;
+	    //for(int j=0;j<=am;++j)
+		//rozw[i-RR[m-i]+j]=true;
+	    if(am<0)
+		continue;
+	    ++rozw[i-RR[m-i]];
+	    --rozw[i-RR[m-i]+am+1];
 	    //for(;R[i]+RR[m-i]>=n;--RR[m-i])
 	    //{
 		//rozw[i-RR[m-i]]=true;
@@ -87,13 +92,20 @@ int main()
 	    //}
 	}
 
-	int w=0;
+	int w=0,t=0;
 	for(int i=0;i<=m-n;++i)
-	    w+=rozw[i];
+	{
+	    t+=rozw[i];
+	    if(t>0)
+		++w;
+	}
 	printf("%d",w);
-	for(int i=0;i<=m-n;++i)
-	    if(rozw[i])
+	for(int i=0,t=0;i<=m-n;++i)
+	{
+	    t+=rozw[i];
+	    if(t>0)
 		printf(" %d",i);
+	}
 	printf("\n");
 
 
