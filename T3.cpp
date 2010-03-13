@@ -1,71 +1,146 @@
 #include <cstdio>
-#include <cstring>
+#include <algorithm>
+#include <map>
+#include <queue>
 
-const int maxSize=2000005;
+using namespace std;
 
-int n;
+#define REP(n,i) for(int i=0;i<n;++i)
 
-void kmp(char* const W,const int N,int* const PS,char* const T,const int M,int* const R)
+struct node;
+
+typedef int alfabet;		// Wybieram alfabet
+typedef map<alfabet,node*> nmap;
+
+int patternsCount;
+int *length;
+
+struct node
 {
-    int t=-1;
-    for(int j=0;j<=M;++j)
+    nmap edges;
+    int pattern;
+    node * fail;
+    node *fast;
+
+    node() : pattern(-1) {}
+
+    ~node()
     {
-	while(t>=0 && T[j-1]!=W[t])
-	    t=PS[t];
-	R[j]=++t;
-	if(t==N)
-	    t=PS[t];
+	for(nmap::iterator i=edges.begin(),e=edges.end();i!=e;++i)
+	    delete i->second;
+    }
+};
+
+void prepare(node *root)
+{
+    queue<node*> Q;
+    for(nmap::iterator i=root->edges.begin(),e=root->edges.end();i!=e;++i)
+    {
+	i->second->fail=root;
+	i->second->fast=root;
+	Q.push(i->second);
+    }
+    root->fail=root;
+    root->fast=root;
+    while(!Q.empty())
+    {
+	node *r=Q.front(); Q.pop();
+	for(nmap::iterator a=r->edges.begin(),e=r->edges.end();a!=e;++a)
+	{
+	    node *u=a->second;
+	    Q.push(u);
+	    node *v=r->fail;
+	    while(v!=root && v->edges.find(a->first)==v->edges.end())
+		v=v->fail;
+	    u->fail=(v->edges.find(a->first)==v->edges.end())?root:(v->edges[a->first]);// CHOKE ME!
+	    u->fast=(u->fail->pattern==-1)?u->fail->fast:u->fail;			// PREPARE OUT!!!!!
+	}
     }
 }
+
+void dump(node *root,int l)
+{
+    if(root->pattern==-1)
+	root=root->fast;
+    for(;root!=root->fail;root=root->fast)
+    {
+	printf("%d %d\n",root->pattern,l+1-length[root->pattern]);
+    }
+}
+
+#ifdef debug
+void discover(node *root)
+{
+    if(root->pattern!=-1)
+	printf(":%d %d\n",root->pattern,length[root->pattern]);
+    {
+	for(nmap::iterator i=root->edges.begin(),e=root->edges.end();i!=e;++i)
+	{
+	    printf("%d ",i->first);
+	    discover(i->second);
+	}
+    }
+}
+#endif
 
 int main()
 {
     int z;
-    scanf("%d\n",&z);
-    char *W=new char[maxSize];
-    char *T=new char[maxSize];
-    int *PS=new int[maxSize+1];
-    int *R=new int[maxSize+1];
-    int *A=new int[maxSize+1];
-    int *B=new int[maxSize+1];
-
+    scanf("%d",&z);
     while(z--)
     {
-	scanf("%s\n",W);
-	n=strlen(W);			// Długość W - n
-	for(int i=n-1;i>=0;--i)		// T=W.reverse()
-	    T[n-i-1]=W[i];
-	T[n]=0;
-
-	PS[0]=R[0]=-1;
-	kmp(W,n,PS,W+1,n-1,PS+1);
-	kmp(T,n,R,T+1,n-1,R+1);
-
-	kmp(T,n,R,W,n,A);
-	kmp(W,n,PS,T,n,B);
-
-	if(A[n]>B[n])
+	int n;
+	scanf("%d",&n);
+	patternsCount=n;
+	node *root=new node();
+	length=new int[n+1];
+	/* BEGIN STAGE 1 */
+	for(int pattern=1;pattern<=n;++pattern)
 	{
-	    printf("%s",W);
-	    for(int i=A[n];i<n;++i)
-		putchar(T[i]);
-	    printf("\n");
+	    int l;
+	    scanf("%d",&l);
+	    length[pattern]=l;
+	    node *ptr=root;
+	    while(l--)
+	    {
+		alfabet c;
+		scanf("%d",&c);
+		if(ptr->edges.find(c)==ptr->edges.end())
+		    ptr->edges[c]=new node();
+		ptr=ptr->edges[c];
+		if(l==0)
+		    ptr->pattern=pattern;
+	    }
 	}
-	else
+	/* BEGIN STAGE 2 */
+	prepare(root);
+
+	/* END OF PREPARE */
+
+	int l;
+	scanf("%d",&l);
+	node *q=root;
+	for(int i=1;i<=l;++i)
 	{
-	    printf("%s",T);
-	    for(int i=B[n];i<n;++i)
-		printf("%c",W[i]);
-	    printf("\n");
+	    bool ok=true;
+	    alfabet c;
+	    scanf("%d",&c);
+	    while((((q==0)?q=root:false) || true) && q->edges.find(c)==q->edges.end())
+	    {
+		if(q==root)
+		{
+		    ok=false;
+		    break;
+		}
+		q=q->fail;
+	    }
+	    if(!ok)
+		continue;
+	    q=q->edges[c];
+	    dump(q,i);
 	}
+	printf("-1 -1\n");
+	delete [] length;
+	delete root;
     }
-
-    delete [] W;
-    delete [] T;
-    delete [] PS;
-    delete [] R;
-    delete [] A;
-    delete [] B;
-
-    return 0;
 }
