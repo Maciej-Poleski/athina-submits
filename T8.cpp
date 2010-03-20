@@ -11,7 +11,7 @@ void kmp(pair<complex<long long>,complex<long long> >* const W,const int N,int* 
     int t=-1;
     for(int j=0;j<=M;++j)
     {
-	while(t>=0 && T[j-1].first*W[t].second!=T[j-1].second*W[t].first)
+	while(t>=0 && T[j-1].second*W[t].first!=T[j-1].first*W[t].second)
 	    t=PS[t];
 	R[j]=++t;
 	if(t==N)
@@ -27,14 +27,12 @@ int main()
     {
 	int n;
 	scanf("%d",&n);
-	pair<int,int> *A=new pair<int,int>[n+2];		// Współrzędne
+	pair<int,int> *A=new pair<int,int>[n+1];		// Współrzędne
 	REP(n,i) scanf("%d%d",&A[i].first,&A[i].second);
-	pair<int,int> *B=new pair<int,int>[n+2];
+	pair<int,int> *B=new pair<int,int>[n+1];
 	REP(n,i) scanf("%d%d",&B[i].first,&B[i].second);
 	A[n]=A[0];
 	B[n]=B[0];
-	A[n+1]=A[1];
-	B[n+1]=B[1];
 	complex<long long> *T=new complex<long long>[n+1];	// Wektory
 	complex<long long> *P=new complex<long long>[n+1];
 	REP(n,i)
@@ -57,7 +55,7 @@ int main()
 	pair<complex<long long>,complex<long long> > PP[n];	// Wzorzec
 
 	REP(n,i) TT[i]=make_pair(T[i],T[i+1]),PP[i]=make_pair(P[i],P[i+1]);
-	REP(n,i) TT[n+1]=TT[i];
+	REP(n,i) TT[n+i]=TT[i];
 
 	delete [] T;
 	delete [] P;
@@ -69,8 +67,10 @@ int main()
 	kmp(PP,n,PS,TT,n*2,R);
 
 	int max=0;
-	REP(n*2+1,i) max=max<R[i]?R[i]:max;
-	printf("%s\n",max+1>=n?"TAK":"NIE");
+	REP(n*2+1,i) printf("%d ",R[i]);
+	printf("\n");
+	REP(n*2+1,i) max=((max<R[i])?R[i]:max);
+	printf("%s\n",max>=n?"TAK":"NIE");
     }
     return 0;
 }
