@@ -67,8 +67,8 @@ int main()
 	kmp(PP,n,PS,TT,n*2,R);
 
 	int max=0;
-	REP(n*2+1,i) printf("%d ",R[i]);
-	printf("\n");
+	//REP(n*2+1,i) printf("%d ",R[i]);
+	//printf("\n");
 	REP(n*2+1,i) max=((max<R[i])?R[i]:max);
 	printf("%s\n",max>=n?"TAK":"NIE");
     }
