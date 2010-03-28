@@ -41,7 +41,7 @@ public:
 
     R operator*(const Vector &o) const
     {
-	return this->x*o.y-this->y*o.x;
+	return this->x*static_cast<R>(o.y)-this->y*static_cast<R>(o.x);
     }
 };
 
