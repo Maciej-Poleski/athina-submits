@@ -253,13 +253,13 @@ int main()
 		}
 		else
 		{
-		    //if(Q*R<0)	// Warunek jest zły !!!!!!!!!!!
-		    //{
-		//	printf("Podnoszę ze stosu 2\n");
-		//	S.pop();
-		//	continue;
-		    //}
-		    //else
+		    if(L[i].V().x<0 && Q*R>0)	// Warunek jest zły !!!!!!!!!!!
+		    {
+			//printf("Podnoszę ze stosu 2\n");
+			S.pop();
+			continue;
+		    }
+		    else
 			break;
 		}
 	    }
@@ -294,7 +294,7 @@ int main()
 	    S.pop();
 	}
 
-	printf("%Lf\n",W/2);
+	printf("%.7Lf\n",W/2);
     }
     return 0;
 }
