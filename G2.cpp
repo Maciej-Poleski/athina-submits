@@ -232,15 +232,15 @@ int main()
 	    ++p;
 
 	S.push(SL);	// Pierwsza prosta zawsze jest dobra
-	S.push(L[p+1]);
+	S.push(L[(p+1)%n]);
 
-	for(int i=p+2;i!=p+1;++i==n?i=0:false)
+	for(int i=(p+2)%n;i!=(p+1)%n;++i==n?i=0:false)
 	{
 	    while(S.size()>1)
 	    {
 		//Vector<long double,long double> Q=lineCrossPoint<int,long double>(L[i],S[1]);
 		Vector<long double,long double> R=lineCrossPoint<int,long double>(L[i],S[1]);
-		Vector<long double,long double> Q=lineCrossPoint<int,long double>(L[2],S[1]);
+		Vector<long double,long double> Q=lineCrossPoint<int,long double>(S[2],S[1]);
 		/*if((X-Q)*(Vector<long double,long double>(0,0)-Q)>0)
 		{
 		    //printf("Podnoszę ze stosu\n");
