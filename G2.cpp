@@ -253,13 +253,13 @@ int main()
 		}
 		else
 		{
-		    if(L[i].V().x<0 && Q*R>0)	// Warunek jest zły !!!!!!!!!!!
-		    {
+		    //if(L[i].V().x<0 && Q*R>0)	// Warunek jest zły !!!!!!!!!!!
+		    //{
 			//printf("Podnoszę ze stosu 2\n");
-			S.pop();
-			continue;
-		    }
-		    else
+			//S.pop();
+			//continue;
+		    //}
+		    //else
 			break;
 		}
 	    }
