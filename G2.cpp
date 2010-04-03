@@ -288,7 +288,7 @@ int main()
 // 	    else
 // 		S.push(L[p]);*/
 //
-// 	    Vector<long double,long double> Q=lineCrossPoint<int,long double>(L[2],S[1]);
+// 	    Vector<long double,long double> Q=lineCrossPoint<int,long double>(S[2],S[1]);
 // 	    Vector<long double,long double> R=lineCrossPoint<int,long double>(L[p],S[1]);
 // 	    if(Q*R>0)								// ^^^^
 // 	    {
@@ -314,7 +314,7 @@ int main()
 	    W+=(p1.x+p2.x)*(p1.y-p2.y);
 	    S.pop();
 	}
-	if(W==0)
+	if(W<10e-5)
 	    printf("INF\n");
 	else
 	    printf("%.7Lf\n",W/2);
