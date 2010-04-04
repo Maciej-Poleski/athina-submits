@@ -323,9 +323,9 @@ int main()
 	    W+=(p1.x+p2.x)*(p1.y-p2.y);
 	    S.pop();
 	}
-	//if(W==0)
-	 //   printf("INF\n");
-	//else
+	if(W==0)
+	    printf("INF\n");
+	else
 	    printf("%.7Lf\n",W/2);
     }
     return 0;
