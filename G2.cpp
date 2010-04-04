@@ -113,6 +113,11 @@ class Vector : public Point<T>
 	{
 	    return sqrt(static_cast<R>(this->x)*(this->x)+static_cast<R>(this->y)*(this->y));
 	}
+
+	bool isZero() const
+	{
+	    return abs(this->x)<10e-5 && abs(this->y)<10e-5;
+	}
 };
 
 template<class T,class R>
@@ -251,7 +256,7 @@ int main()
 		    break;*/
 		/*if((X-Q)*(R-Q)>0)
 		{*/
-		    if(Q*R<0)	// Warunek jest zły !!!!!!!!!!!
+		    if(Q*R<0 || (Q-R).isZero())	// Warunek jest zły !!!!!!!!!!!
 		    {
 		    	Line<int,long double> l=S.pop();
 			//printf("Podnoszę ze stosu %d %d %d %d\n",l.A.x+P.x,l.A.y+P.y,l.B.x+P.x,l.B.y+P.y);
@@ -275,29 +280,33 @@ int main()
 
 	    S.push(L[i]);	// Teraz jesteśmy gotowi na dodanie tej prostej do stosu
 	}	// Stos jest prawie gotowy
-// 	{
-// 	    /*Vector<long double,long double> Q=lineCrossPoint<int,long double>(L[p],S[1]);
-// 	    Vector<long double,long double> R=lineCrossPoint<int,long double>(L[p],S[2]);
-// 	    Vector<long double,long double> X=lineCrossPoint<int,long double>(L[1],S[2]);
-// 	    if((X-Q)*(Vector<long double,long double>(0,0)-Q)>0)
-// 	    {
-// 		//printf("Podnoszę ze stosu\n");
-// 		printf("INF\n");
-// 		continue;
-// 	    }
-// 	    else
-// 		S.push(L[p]);*/
-//
-// 	    Vector<long double,long double> Q=lineCrossPoint<int,long double>(S[2],S[1]);
-// 	    Vector<long double,long double> R=lineCrossPoint<int,long double>(L[p],S[1]);
-// 	    if(Q*R>0)								// ^^^^
-// 	    {
-// 		printf("INF\n");
-// 		continue;
-// 	    }
-// 	    else
-// 		S.push(L[p]);
-// 	}	// Teraz już gotowe */
+	{
+	    /*Vector<long double,long double> Q=lineCrossPoint<int,long double>(L[p],S[1]);
+	    Vector<long double,long double> R=lineCrossPoint<int,long double>(L[p],S[2]);
+	    Vector<long double,long double> X=lineCrossPoint<int,long double>(L[1],S[2]);
+	    if((X-Q)*(Vector<long double,long double>(0,0)-Q)>0)
+	    {
+		//printf("Podnoszę ze stosu\n");
+		printf("INF\n");
+		continue;
+	    }
+	    else
+		S.push(L[p]);*/
+	    if(S.size()<3)
+	    {
+		printf("INF\n");
+		continue;
+	    }
+	    Vector<long double,long double> B=lineCrossPoint<int,long double>(S[2],S[3]);
+	    Vector<long double,long double> A=lineCrossPoint<int,long double>(S[2],S[1]);
+	    if(B*A<0)								// ^^^^
+	    {
+		printf("INF\n");
+		continue;
+	    }
+	    //else
+		//S.push(L[p]);
+	}	// Teraz już gotowe */
 
 	/*printf("Stos:\n");
 	for(int i=S.size();i>0;--i)
@@ -314,9 +323,9 @@ int main()
 	    W+=(p1.x+p2.x)*(p1.y-p2.y);
 	    S.pop();
 	}
-	if(W<10e-5)
-	    printf("INF\n");
-	else
+	//if(W==0)
+	 //   printf("INF\n");
+	//else
 	    printf("%.7Lf\n",W/2);
     }
     return 0;
