@@ -218,7 +218,7 @@ int main()
 
 	SL=L[0];
 	REP(n,i) if(abs(SL.dist(Z))>abs(L[i].dist(Z))) SL=L[i];	// Najbliższa prosta - SL
-	VL=SL.A-SL.B;
+	//VL=SL.A-SL.B;
 
 	sort(L,L+n);
 
@@ -326,7 +326,7 @@ int main()
 	if(W==0)
 	    printf("INF\n");
 	else
-	    printf("%.7Lf\n",W/2);
+	    printf("%.24Lf\n",W/2);
     }
     return 0;
 }
