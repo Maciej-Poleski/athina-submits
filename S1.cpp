@@ -6,18 +6,19 @@ using namespace std;
 
 typedef unsigned long long hash;
 
-hash p=22801763489LL;
+hash P=22801763489LL;
+hash tmp[200005];
 
-hash parseInput()
+hash parseInput(int p)
 {
-    vector<hash> subTree;
-    while(getchar()=='(') subTree.push_back(parseInput());
-    sort(subTree.begin(),subTree.end());
+    int i=p+1;
+    while(getchar()=='(') parseInput(i++);
+    sort(tmp+p+1,tmp+i);
     hash h=3;
-    for(int i=0,e=subTree.size();i<e;++i)
-	h=(h*p)^subTree[i];
-    //printf("%llu\n",h*7);
-    return h*7;
+    for(int x=p+1;x<i;++x)
+	h=(h*P)^tmp[x];
+    h*=7;
+    tmp[p]=h;
 }
 
 int main()
@@ -29,8 +30,11 @@ int main()
 	hash tree[n];
 	for(int i=0;i<n;++i)
 	{
-	    if(getchar()=='(') { tree[i]=parseInput(); if(i<n-1) scanf("\n"); }
-	    else tree[i]=0;
+	    /*
+	    if(getchar()=='(') { parseInput(0); tree[i]=tmp[0]; if(i<n-1) scanf("\n"); }
+	    else tree[i]=0;*/
+	    parseInput(0);
+	    tree[i]=tmp[0];
 	}
 	sort(tree,tree+n);
 	printf("%ld\n",unique(tree,tree+n)-tree);
