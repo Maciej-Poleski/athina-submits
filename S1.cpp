@@ -7,15 +7,15 @@ using namespace std;
 typedef unsigned long long hash;
 
 hash P=22801763489LL;
-hash tmp[200005];
+hash tmp[100005];
 
 hash parseInput(int p)
 {
-    int i=p+1;
+    int i=p;
     while(getchar()=='(') parseInput(i++);
-    sort(tmp+p+1,tmp+i);
+    sort(tmp+p,tmp+i);
     hash h=3;
-    for(int x=p+1;x<i;++x)
+    for(int x=p;x<i;++x)
 	h=(h*P)^tmp[x];
     h*=7;
     tmp[p]=h;
