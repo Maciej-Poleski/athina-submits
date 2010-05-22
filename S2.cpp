@@ -1,219 +1,148 @@
 #include <cstdio>
-#include <utility>
 #include <cstring>
+#include <algorithm>
 
 using namespace std;
 
-#define CALLBACK
-
-typedef unsigned int uint;
 typedef long long int64;
 typedef unsigned long long uint64;
-typedef uint64 hash;
-typedef unsigned char byte;
+typedef long int32;
+typedef unsigned long uint32;
+typedef unsigned int uint;
 
-uint64 P=65063LL;		// PRIME(6500)
-int C=6;			// Globalne na wątek, tylko inkrementacja
-int size=1U<<C;
-int insertCount;
-int deleteCount;
-
-hash getHash(const char * S)
+struct Node
 {
-    hash H=0;
-    for(int i=0;S[i];++i)
-	H=H*P+S[i];
-    return H;
-}
+    char *key;
+    char *value;
+    bool isRed;
+    int count;
+    Node *CH[2];
 
-struct element
-{
-    char * key;			// Klucz, nazwa domeny
-    hash H;			// Hash
-    byte IP[4];			// IP domeny
-    byte state;			// Stan elementu
-
-    element() : key(0), state(0) {}
-
-    #define EMPTY 0
-    #define FULL 1
-    #define DELETED 3
-};
-
-element *hashMap;
-
-inline void allocate()
-{
-    hashMap=new element[size=(1U<<C)];	// Little-endian only
-}
-
-void CALLBACK checkHashMap();
-
-inline static pair<uint,uint> HashMap__find(const char *S,hash H)	// To co znajdziemy jest na pewno poprawne
-{
-    uint M=((1U<<C)-1U);
-    uint H0=H&M;
-    uint H1=((H*P)|1U)&M;
-    pair<uint,uint> R;
-    R.first=R.second=-1;
-
-    uint HI=H0;
-    do
+    Node(const char *const K,const char *const V) : isRed(true), count(1)
     {
-	switch(hashMap[HI].state)
-	{
-	    case EMPTY:
-		R.second=HI;
-		return R;
-		break;
-	    case DELETED:
-		if(R.first==-1) R.first=HI;
-		break;
-	    case FULL:
-		if(hashMap[HI].H==H && strcmp(S,hashMap[HI].key)==0)
-		{
-		    R.second=HI;
-		    return R;
-		}
-		break;
-	}
-	HI=(HI+H1)&M;
-    } while(HI!=H0);
-    return R;
-}
-
-inline void INSERT(const char *S,byte IP[4],hash H)
-{
-    pair<uint,uint> R=HashMap__find(S,H);
-    if(R.second==-1) R.second=0;		// HACK, to nie powinno się wydarzyć!
-    if(R.first!=-1)
-    {
-	int len=strlen(S);
-	delete [] hashMap[R.first].key;
-	hashMap[R.first].key=new char[len+2];
-	strcpy(hashMap[R.first].key,S);		// Aktualizacja klucza
-	hashMap[R.first].H=H;			// Aktualizacja hash-a
-	hashMap[R.first].IP[0]=IP[0];
-	hashMap[R.first].IP[1]=IP[1];
-	hashMap[R.first].IP[2]=IP[2];
-	hashMap[R.first].IP[3]=IP[3];		// Aktualizacja IP
-	hashMap[R.first].state=FULL;		// Aktualizacja stanu
-	--deleteCount;
-	++insertCount;
-
-	if(hashMap[R.second].state==FULL)
-	    hashMap[R.second].state=DELETED,--insertCount,++deleteCount;
-	else
-	    ;
+	CH[0]=CH[1]=0;
+	key=new char[strlen(K)+1];
+	strcpy(key,K);
+	value=new char[strlen(V)+1];
+	strcpy(value,V);
     }
-    else					// Jeżeli nie znaleźliśmy usuniętego
+
+    ~Node()
     {
-	if(hashMap[R.second].state==FULL)	// Jeżeli ten wpis już istnieje
-	{
-	    hashMap[R.second].IP[0]=IP[0];
-	    hashMap[R.second].IP[1]=IP[1];
-	    hashMap[R.second].IP[2]=IP[2];
-	    hashMap[R.second].IP[3]=IP[3];	// Aktualizacja IP -- TYLKO
-	}
-	else					// Jeżeli ten wpis nie istnieje
-	{
-	    int len=strlen(S);
-	    delete [] hashMap[R.second].key;
-	    hashMap[R.second].key=new char[len+2];
-	    strcpy(hashMap[R.second].key,S);	// Ustawiam klucz
-	    hashMap[R.second].H=H;		// Ustawiam hash
-	    hashMap[R.second].IP[0]=IP[0];
-	    hashMap[R.second].IP[1]=IP[1];
-	    hashMap[R.second].IP[2]=IP[2];
-	    hashMap[R.second].IP[3]=IP[3];	// Ustawiam IP
-	    hashMap[R.second].state=FULL;	// Ustawiam stan
-	    ++insertCount;
-	}
+	delete CH[0];
+	delete CH[1];
+	delete [] key;
+	delete [] value;
     }
-    checkHashMap();
+
+    /*void dump(int p=0)
+    {
+	for(int i=0;i<p;++i) printf(" ");
+	printf("%s %d %d\n",key,(int)isRed,count);
+	if(CH[0]) CH[0]->dump(p+1); else {for(int i=0;i<=p;++i) printf(" "); printf("[]\n");}
+	if(CH[1]) CH[1]->dump(p+1); else {for(int i=0;i<=p;++i) printf(" "); printf("[]\n");}
+    }*/
+}*R;
+
+Node *find(Node *R,const char *const key)
+{
+    //printf("W węźle %s szukam %s wynik %d\n",R?R->key:"NULL",key,R?strcmp(R->key,key):0);
+    int C;
+    if(R==0 || (C=strcmp(R->key,key))==0) return R;
+    else return find(R->CH[C<0],key);
 }
 
-inline void DELETE(const char *S)
+void rotate(Node *&R,bool DIR)
 {
-    hash H=getHash(S);
-    pair<uint,uint> R=HashMap__find(S,H);
-    if(R.second==-1) R.second=0;		// HACK, to nie powinno się wydarzyć!
-    if(hashMap[R.second].state==FULL)
-    {
-	hashMap[R.second].state=DELETED,++deleteCount,--insertCount;
-	printf("%d.%d.%d.%d\n",(int)hashMap[R.second].IP[0],(int)hashMap[R.second].IP[1],(int)hashMap[R.second].IP[2],(int)hashMap[R.second].IP[3]);
-    }
+    Node *T=R;
+    R=T->CH[DIR];
+    T->CH[DIR]=R->CH[!DIR];
+    R->CH[!DIR]=T;
+
+    R->CH[!DIR]->count=1+((R->CH[!DIR]->CH[0])?(R->CH[!DIR]->CH[0]->count):0)+((R->CH[!DIR]->CH[1])?(R->CH[!DIR]->CH[1]->count):0);
+    R->count=1+((R->CH[0])?(R->CH[0]->count):0)+((R->CH[1])?(R->CH[1]->count):0);
+}
+
+void insert(Node *&R,const char *const key,const char *const value)
+{
+    if(R==0)
+	R=new Node(key,value);
     else
-	printf("ERROR\n");
-    checkHashMap();
-}
-
-inline void FIND(const char *S)
-{
-    hash H=getHash(S);
-    pair<uint,uint> R=HashMap__find(S,H);
-    if(R.second==-1) R.second=0;		// HACK, to nie powinno się wydarzyć!
-    if(hashMap[R.second].state==FULL)
-	printf("%d.%d.%d.%d\n",(int)hashMap[R.second].IP[0],(int)hashMap[R.second].IP[1],(int)hashMap[R.second].IP[2],(int)hashMap[R.second].IP[3]);
-    else
-	printf("ERROR\n");
-}
-
-void CALLBACK checkHashMap()
-{
-    if((insertCount<(size>>1)) && (insertCount+deleteCount)<((size>>2)*3))
-	return;
-    element *oldHashMap=hashMap;
-    ++C;					// WARNING: Tylko tutaj wolno to zrobić!!!
-    uint oldSize=size;
-    allocate();
-    deleteCount=insertCount=0;
-    for(int i=0;i<oldSize;++i)
     {
-	if(oldHashMap[i].state==FULL)
-	    INSERT(oldHashMap[i].key,oldHashMap[i].IP,oldHashMap[i].H);
+	int C=strcmp(R->key,key);
+	if(C==0)
+	{
+	    delete [] R->value;
+	    R->value=new char[strlen(value)+1];
+	    strcpy(R->value,value);
+	    return;
+	}
+	insert(R->CH[C<0],key,value);
+	R->count=1+((R->CH[0])?(R->CH[0]->count):0)+((R->CH[1])?(R->CH[1]->count):0);
+	//::R->dump(); printf("\n");
+	// Dokończyć rotowanie
+	if(R->CH[0] && R->CH[0]->isRed && R->CH[1] && R->CH[1]->isRed)
+	{
+	    R->CH[0]->isRed=R->CH[1]->isRed=false;
+	    R->isRed=true;
+	}
+	if(R->CH[1] && R->CH[1]->isRed)
+	{
+	    rotate(R,true);
+	    swap(R->isRed,R->CH[0]->isRed);
+	}
+	if(R->CH[0] && R->CH[0]->isRed && R->CH[0]->CH[0] && R->CH[0]->CH[0]->isRed)
+	{
+	    rotate(R,false);
+	    R->CH[0]->isRed=false;
+	    R->CH[1]->isRed=false;
+	    R->isRed=true;
+	}
     }
-    delete [] oldHashMap;
+}
+
+Node *select(Node *R,int N)
+{
+    int Cl=(R->CH[0])?R->CH[0]->count:0;
+    if(Cl==N) return R;
+    return (N<Cl)?select(R->CH[0],N):select(R->CH[1],N-Cl-1);
 }
 
 int main()
 {
-    int z;
-    scanf("%d",&z);
+    int z; scanf("%d",&z);
     while(z--)
     {
-	uint64 n;
-	scanf("%llu",&n);
-	allocate();
-	insertCount=deleteCount=0;
+	R=0;
+	int64 n; scanf("%lld",&n);
 	while(n--)
 	{
 	    char command[9];
-	    char name[25];
-	    int IIP[4];
-	    byte BIP[4];
+	    char name[18];
+	    char value[18];
+	    Node *F;
 	    scanf("%s ",command);
 	    switch(*command)
 	    {
 		case 'I':
-		    scanf("%s %d.%d.%d.%d\n",name,IIP+0,IIP+1,IIP+2,IIP+3);
-		    BIP[0]=IIP[0];
-		    BIP[1]=IIP[1];
-		    BIP[2]=IIP[2];
-		    BIP[3]=IIP[3];
-		    INSERT(name,BIP,getHash(name));
-		    break;
-		case 'D':
-		    scanf("%s\n",name);
-		    DELETE(name);
+		    scanf("%s %s\n",name,value);
+		    insert(R,name,value);
+		    //::R->dump(); printf("Koniec\n\n");
+		    R->isRed=false;
 		    break;
 		case 'F':
 		    scanf("%s\n",name);
-		    FIND(name);
+		    F=find(R,name);
+		    printf("%s\n",F?F->value:"ERROR");
+		    break;
+		default:     // SELECT
+		    int N; scanf("%d\n",&N);
+		    F=(N<(R->count))?select(R,N):0;
+		    printf("%s\n",F?F->key:"ERROR");
 		    break;
 	    }
 	}
-	delete [] hashMap;
+	delete R;
     }
     return 0;
 }
